@@ -26,3 +26,7 @@ Our paper prototype had three tasks: *Post an item* (a seller lists a book for s
 - The 24-hour claim/offer window is a placeholder, untested value.
 - "Message seller" and "Not interested" are non-functional dead ends by design.
 - The "Search course" screen is duplicated once in Figma: the same screen needed to lead to two different next screens depending on whether you're posting a request (Task 1) or browsing existing copies (Task 3), which one frame can't do with a single click target. Every other screen is used once.
+
+## What changed since the instructor meeting
+
+Our original figma prototype had poor navigation when moving from screen to screen. In order to address this we took the instructors feedback of adding a menu bar at the bottom of our screen. This enabled us to move between tasks much easier. 
