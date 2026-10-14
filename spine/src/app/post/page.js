@@ -1,5 +1,11 @@
-import PlaceholderScreen from "@/components/PlaceholderScreen";
+import ScreenHeader from "@/components/ScreenHeader";
+import CourseSearch from "./CourseSearch";
 
 export default function PostPage() {
-  return <PlaceholderScreen title="Post what you need" />;
+  return (
+    <>
+      <ScreenHeader title="Search course" backHref="/" side="buying" />
+      <CourseSearch />
+    </>
+  );
 }
