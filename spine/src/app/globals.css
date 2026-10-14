@@ -16,8 +16,11 @@
   --color-ink: #1e2330;
   --color-paper: #f3ece1;
   --color-card: #f9f5ee;
+  --color-line: #c7baa1;
+  --color-muted: #6b6b66;
   --color-gold: #b8862b;
   --color-accent: #d9822b;
+  --color-buying: #286b82;
 }
 
 @media (prefers-color-scheme: dark) {
