@@ -1,32 +1,48 @@
-# CourseShelf — Digital Prototype README
+# spine: Startup Instructions
 
-Group 8 — Andrew Churchich, Charlie Pyle, Treggie Sebek
+Group 8: Andrew Churchich, Charlie Pyle, Treggie Sebek
 
-## The 3 tasks
+spine is a phone-style web prototype for buying and selling used course textbooks. It runs on your own computer in a web browser. There is no login, account or database to set up.
 
-- **Post a "Looking For" request.** A buyer signals they need a specific course's book before any listing for it exists, so a seller can be notified later instead of the buyer re-searching repeatedly.
-- **Respond to a match and make an offer.** A seller (via My Shelf or the notification bell) is told someone wants a book they own, and sends a fixed-price offer.
-- **Browse listings and claim a copy with fit verified.** A buyer searches by course, sees which listings need an access code before opening anything, and claims a copy confirmed to fit their section.
+## What you need
 
-## Navigation
+- **Node.js 20.9 or newer.** npm comes with it. Download the LTS version from https://nodejs.org. We tested with Node 22.20.0.
+- **A web browser:** Chrome, Edge, Firefox or Safari.
+- **An internet connection** to install packages and load fonts.
 
-Start on **Home**. Three entry points, one per task: "Post what you need" (Task 1), "Browse available copies" (Task 3), and "My Shelf" or the bell icon (Task 2). Each task is a straight tap-through path that ends on a confirmation screen with a checkmark and a "Back to Home" button. Not every element is wired — "Not interested," "Message seller," and the price/condition "Change" link are decorative, since only one working path per task is required.
+Nothing else needs to be installed. To check your Node version, run `node --version` in a terminal.
 
-## What changed since the paper prototype and testing
+## Getting the files
 
-Our paper prototype had three tasks: *Post an item* (a seller lists a book for sale), *Browse Listings* (a buyer browses, with a bidding option), and *View "My Shelf"* (unclear purpose). We tested it with 3 users and made three changes directly from what we saw:
+- **From the Canvas zip:** unzip it. You'll get a folder containing this README and a `spine` folder.
+- **From GitHub:** run `git clone https://github.com/charlierpyle-cmd/HumanComputerInteraction.git`
 
-- **"My Shelf" confused 2 of 3 testers** — they weren't sure if it was for buying or for viewing what they owned. We turned it into a specific seller flow: it's now where a seller sees "someone wants this" matches and responds, not a general-purpose screen.
-- **Tester 2 called the bidding option "bad design."** We removed bidding entirely. A seller now sets one fixed price when responding to a request, and the buyer sees that price up front rather than negotiating live.
-- **Tester 3 said listings didn't read as clickable, and suggested "Post" could say "Sell."** We gave listing rows visible card borders and status badges so they read as interactive. We did not rename "Post" to "Sell," though — our broader research (contextual inquiries, not just this test) found sellers almost never list proactively on their own, so the bigger fix was flipping who initiates: Task 1 became a buyer *requesting* a book instead of a seller listing one, with Task 2 (make an offer) as the seller's response to that request.
+## Running it
 
-## Assumptions / limitations
+Open a terminal in the folder that contains this README, then run:
 
-- Assumes a course/section directory already exists to search against; how that data gets populated isn't shown.
-- The 24-hour claim/offer window is a placeholder, untested value.
-- "Message seller" and "Not interested" are non-functional dead ends by design.
-- The "Search course" screen is duplicated once in Figma: the same screen needed to lead to two different next screens depending on whether you're posting a request (Task 1) or browsing existing copies (Task 3), which one frame can't do with a single click target. Every other screen is used once.
+```
+cd spine
+npm install
+npm run dev
+```
 
-## What changed since the instructor meeting
+The first `npm install` takes a minute or two. When the terminal shows `Ready`, open **http://localhost:3000** in your browser.
 
-Our original figma prototype had poor navigation when moving from screen to screen. In order to address this we took the instructors feedback of adding a menu bar at the bottom of our screen. This enabled us to move between tasks much easier. 
+To stop the server, press `Ctrl+C` in the terminal.
+
+The commands are the same on Windows, macOS and Linux.
+
+### Viewing it at phone size
+
+spine is designed as a phone app. On a desktop browser it shows up as a narrow column in the middle of the window, and that works fine. To see it at true phone size, open the browser's developer tools (`F12`), turn on device mode (`Ctrl+Shift+M`, or `Cmd+Shift+M` on a Mac) and pick a phone.
+
+## The three tasks
+
+Start each task on the Home screen. The bar along the bottom (Home, Browse, Post, Shelf) is on every screen, and the arrow at the top left goes back.
+
+1. **Post a "Looking for" request.** You need the textbook for STAT 210 and nobody is selling one yet. Join the waitlist so you're told when a copy is listed.
+2. **Respond to a match and make an offer.** Another student wants a textbook you own. Send them an offer for it.
+3. **Browse listings and claim a copy.** Find a copy listed for your course that fits your section, and claim it.
+
+Each task ends on a confirmation screen with a checkmark and a "Back to Home" button.
