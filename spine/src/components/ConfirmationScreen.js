@@ -2,7 +2,7 @@ import Link from "next/link";
 import ScreenHeader from "@/components/ScreenHeader";
 
 // The end of every task: a checkmark, what just happened, and a way home.
-export default function ConfirmationScreen({ title, side, recap, children }) {
+export default function ConfirmationScreen({ title, side, recap, actions, children }) {
   return (
     <>
       <ScreenHeader title={title} side={side} />
@@ -17,9 +17,10 @@ export default function ConfirmationScreen({ title, side, recap, children }) {
         <p className="max-w-[280px] text-[13px] leading-4 text-muted">
           {children}
         </p>
-        <p className="rounded-lg border border-line bg-card px-4 py-3 text-xs">
+                <p className="rounded-lg border border-line bg-card px-4 py-3 text-xs">
           {recap}
         </p>
+        {actions}
         <Link
           href="/"
           className="w-full rounded-lg bg-gold py-[15px] text-[15px] font-semibold text-white"

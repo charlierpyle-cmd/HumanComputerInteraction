@@ -7,7 +7,7 @@ import { courses } from "@/lib/courses";
 // Ignore case and spacing so "stat210" still finds "STAT 210".
 const normalize = (text) => text.toLowerCase().replace(/\s+/g, "");
 
-export default function CourseSearch() {
+export default function CourseSearch({ basePath = "/post" }) {
   const [query, setQuery] = useState("");
   const needle = normalize(query);
   const matches = courses.filter(
