@@ -4,6 +4,7 @@ import Link from "next/link";
 // look distinct at a glance.
 const sideBadges = {
   buying: { label: "BUYING", className: "bg-buying" },
+  selling: { label: "SELLING", className: "bg-selling" },
 };
 
 export default function ScreenHeader({ title, backHref, side }) {
