@@ -21,6 +21,7 @@
   --color-gold: #b8862b;
   --color-accent: #d9822b;
   --color-buying: #286b82;
+  --color-selling: #3d7a4f;
 }
 
 @media (prefers-color-scheme: dark) {
