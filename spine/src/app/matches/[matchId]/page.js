@@ -17,7 +17,7 @@ export default async function MatchDetailPage({ params }) {
     <>
       <ScreenHeader
         title="Match detail"
-        backHref="/notifications"
+        backHref="/shelf"
         side="selling"
       />
       <main className="flex flex-1 flex-col gap-3.5 px-5 pt-6 pb-5">
