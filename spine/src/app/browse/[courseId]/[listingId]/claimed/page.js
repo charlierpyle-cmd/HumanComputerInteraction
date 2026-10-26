@@ -1,9 +1,15 @@
 import { notFound } from "next/navigation";
 import ConfirmationScreen from "@/components/ConfirmationScreen";
-import { getListing } from "@/lib/listings";
+import { getListing, getListingParams } from "@/lib/listings";
+import { secondaryButton } from "@/lib/styles";
+
+export function generateStaticParams() {
+  return getListingParams();
+}
 
 export default async function CopyClaimedPage({ params }) {
-  const listing = getListing((await params).listingId);
+  const { courseId, listingId } = await params;
+  const listing = getListing(courseId, listingId);
   if (!listing) notFound();
 
   const { course, seller } = listing;
@@ -14,10 +20,7 @@ export default async function CopyClaimedPage({ params }) {
       side="buying"
       recap={`${course.shortTitle ?? course.title} · ${course.code} · held 7 days`}
       actions={
-        <button
-          type="button"
-          className="w-full rounded-lg border border-line bg-card py-[15px] text-[15px] font-semibold"
-        >
+        <button type="button" className={secondaryButton}>
           Message seller
         </button>
       }

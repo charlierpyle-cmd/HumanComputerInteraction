@@ -4,6 +4,7 @@ import ScreenHeader from "@/components/ScreenHeader";
 import ShelfBook from "@/components/ShelfBook";
 import { CURRENT_TERM } from "@/lib/courses";
 import { getMatch, getMatches } from "@/lib/shelf";
+import { primaryButton } from "@/lib/styles";
 
 export function generateStaticParams() {
   return getMatches().map(({ id }) => ({ matchId: id }));
@@ -19,6 +20,7 @@ export default async function MatchDetailPage({ params }) {
         title="Match detail"
         backHref="/shelf"
         side="selling"
+        step="2 of 3"
       />
       <main className="flex flex-1 flex-col gap-3.5 px-5 pt-6 pb-5">
         <div className="flex flex-col gap-0.5 rounded-lg border border-line bg-card px-4 py-3.5">
@@ -32,9 +34,9 @@ export default async function MatchDetailPage({ params }) {
         <ShelfBook book={match.book} />
         <Link
           href={`/matches/${match.id}/offer`}
-          className="mt-auto rounded-lg bg-gold py-3.5 text-center text-[15px] font-semibold text-white"
+          className={`mt-auto ${primaryButton.selling}`}
         >
-          OFFER THIS COPY
+          Offer this copy
         </Link>
         {/* Decorative: declining isn't part of the tested path. */}
         <p className="text-center text-[13px] text-muted">Not interested</p>

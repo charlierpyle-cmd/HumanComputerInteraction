@@ -18,6 +18,7 @@ export default async function MakeOfferPage({ params }) {
         title="Make an offer"
         backHref={`/matches/${match.id}`}
         side="selling"
+        step="3 of 3"
       />
       <main className="flex flex-1 flex-col gap-3.5 px-5 pt-6 pb-5">
         <div className="flex flex-col gap-0.5 rounded-lg border border-line bg-card px-4 py-3.5">

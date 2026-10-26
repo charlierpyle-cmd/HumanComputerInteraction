@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { primaryButton } from "@/lib/styles";
 
 const labelClass = "text-xs font-semibold text-muted";
 const fieldClass = "rounded-lg border border-line bg-white px-3.5 py-3";
@@ -34,7 +35,7 @@ export default function OfferForm({
       </label>
       {/* One fixed price, shown to the buyer up front — no bidding. */}
       <div
-        className={`flex flex-col gap-1 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-gold ${fieldClass}`}
+        className={`flex flex-col gap-1 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-selling ${fieldClass}`}
       >
         <span className="flex text-base font-semibold">
           $
@@ -66,11 +67,8 @@ export default function OfferForm({
         className={`text-[13px] placeholder:text-muted ${fieldClass}`}
       />
 
-      <button
-        type="submit"
-        className="mt-auto rounded-lg bg-gold py-3.5 text-[15px] font-semibold text-white"
-      >
-        SEND OFFER
+      <button type="submit" className={`mt-auto ${primaryButton.selling}`}>
+        Send offer
       </button>
     </form>
   );

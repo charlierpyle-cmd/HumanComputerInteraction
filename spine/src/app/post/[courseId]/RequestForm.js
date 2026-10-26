@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { primaryButton } from "@/lib/styles";
 
 export default function RequestForm({ courseId }) {
   const router = useRouter();
@@ -24,7 +25,7 @@ export default function RequestForm({ courseId }) {
         />
         <span
           aria-hidden
-          className="relative h-[22px] w-10 rounded-full bg-ink/20 transition-colors peer-checked:bg-gold peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-gold after:absolute after:top-[3px] after:left-[3px] after:size-4 after:rounded-full after:bg-white after:transition-transform peer-checked:after:translate-x-[18px]"
+          className="relative h-[22px] w-10 rounded-full bg-ink/20 transition-colors peer-checked:bg-buying peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-buying after:absolute after:top-[3px] after:left-[3px] after:size-4 after:rounded-full after:bg-white after:transition-transform peer-checked:after:translate-x-[18px]"
         />
       </label>
       <input
@@ -34,11 +35,8 @@ export default function RequestForm({ courseId }) {
         aria-label="Note for sellers (optional)"
         className="rounded-lg border border-line bg-white px-3.5 py-3 text-[13px] placeholder:text-muted"
       />
-      <button
-        type="submit"
-        className="mt-auto rounded-lg bg-gold py-3.5 text-[15px] font-semibold text-white"
-      >
-        POST REQUEST
+      <button type="submit" className={`mt-auto ${primaryButton.buying}`}>
+        Post request
       </button>
     </form>
   );
