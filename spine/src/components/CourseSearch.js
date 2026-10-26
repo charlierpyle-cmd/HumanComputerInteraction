@@ -3,14 +3,15 @@
 import Link from "next/link";
 import { useState } from "react";
 import { courses } from "@/lib/courses";
+import { sides } from "@/lib/styles";
 
 // Ignore case and spacing so "stat210" still finds "STAT 210".
 const normalize = (text) => text.toLowerCase().replace(/\s+/g, "");
 
-// Shared by Post and Browse. `intro` says what picking a course will do, and
-// `notes` (keyed by course id) adds a short status beside a course, like
-// "3 copies".
-export default function CourseSearch({ basePath = "/post", intro, notes = {} }) {
+// Shared by Post and Browse. `basePath` is where picking a course goes, `intro`
+// says what picking one will do, and `notes` (keyed by course id) adds a short
+// status beside a course, like "3 copies".
+export default function CourseSearch({ basePath, intro, notes = {} }) {
   const [query, setQuery] = useState("");
   const needle = normalize(query);
   const matches = courses.filter(
@@ -40,7 +41,9 @@ export default function CourseSearch({ basePath = "/post", intro, notes = {} }) 
             <span className="text-xs text-muted">{title}</span>
           </span>
           {notes[id] && (
-            <span className="shrink-0 rounded-full bg-buying/10 px-2 py-0.5 text-[11px] font-semibold text-buying">
+            <span
+              className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold ${sides.buying.tint} ${sides.buying.text}`}
+            >
               {notes[id]}
             </span>
           )}

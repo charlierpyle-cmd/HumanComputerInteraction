@@ -23,7 +23,6 @@ const buttonBase =
 export const primaryButton = {
   buying: `${buttonBase} bg-buying text-white`,
   selling: `${buttonBase} bg-selling text-white`,
-  neutral: `${buttonBase} bg-gold text-white`,
 };
 
 export const secondaryButton = `${buttonBase} border border-line bg-card text-ink`;

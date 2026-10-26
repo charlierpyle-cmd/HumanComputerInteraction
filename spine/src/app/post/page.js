@@ -1,5 +1,5 @@
+import CourseSearch from "@/components/CourseSearch";
 import ScreenHeader from "@/components/ScreenHeader";
-import CourseSearch from "./CourseSearch";
 
 export default function PostPage() {
   return (

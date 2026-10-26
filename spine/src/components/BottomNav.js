@@ -19,18 +19,22 @@ function tabFor(pathname) {
   return parentTab[section] ?? `/${section}`;
 }
 
-// The bar itself. With no `active` tab it doubles as the placeholder shown
+// The bar itself. With no `pathname` it doubles as the placeholder shown
 // while the current path is still unknown.
-export function NavBar({ active }) {
+export function NavBar({ pathname }) {
+  const active = pathname && tabFor(pathname);
+
   return (
     <nav className="sticky bottom-0 grid h-16 grid-cols-4 border-t border-line bg-white">
       {tabs.map(({ href, label, icon }) => {
         const isActive = href === active;
+        // "page" only on the tab's own screen; a screen under it gets "true".
+        const current = href === pathname ? "page" : isActive ? "true" : undefined;
         return (
           <Link
             key={href}
             href={href}
-            aria-current={isActive ? "page" : undefined}
+            aria-current={current}
             className={`relative flex flex-col items-center justify-center gap-1 text-[11px] ${
               isActive ? "font-semibold text-ink" : "font-medium text-muted"
             }`}
@@ -48,5 +52,5 @@ export function NavBar({ active }) {
 }
 
 export default function BottomNav() {
-  return <NavBar active={tabFor(usePathname())} />;
+  return <NavBar pathname={usePathname()} />;
 }

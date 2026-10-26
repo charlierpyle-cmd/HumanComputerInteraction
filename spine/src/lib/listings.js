@@ -43,16 +43,18 @@ function withCourse(listing) {
   return { ...listing, course: getCourse(listing.courseId) };
 }
 
-export function getListings() {
-  return listings.map(withCourse);
+// Route params for every listing screen, which sits under its own course.
+export function getListingParams() {
+  return listings.map(({ id, courseId }) => ({ courseId, listingId: id }));
 }
 
 export function getListingsForCourse(courseId) {
   return listings.filter((l) => l.courseId === courseId).map(withCourse);
 }
 
-export function getListing(id) {
-  const listing = listings.find((l) => l.id === id);
+// Takes the course too, so a listing can't be opened under another course's URL.
+export function getListing(courseId, id) {
+  const listing = listings.find((l) => l.courseId === courseId && l.id === id);
   return listing && withCourse(listing);
 }
 

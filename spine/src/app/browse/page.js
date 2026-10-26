@@ -1,13 +1,14 @@
+import CourseSearch from "@/components/CourseSearch";
 import ScreenHeader from "@/components/ScreenHeader";
-import CourseSearch from "@/app/post/CourseSearch";
 import { courses } from "@/lib/courses";
 import { getListingsForCourse } from "@/lib/listings";
 
 export default function BrowsePage() {
+  // Only courses with copies get a note, so they stand out from the rest.
   const notes = Object.fromEntries(
-    courses.map(({ id }) => {
+    courses.flatMap(({ id }) => {
       const count = getListingsForCourse(id).length;
-      return [id, count === 1 ? "1 copy" : `${count || "No"} copies`];
+      return count ? [[id, count === 1 ? "1 copy" : `${count} copies`]] : [];
     }),
   );
 

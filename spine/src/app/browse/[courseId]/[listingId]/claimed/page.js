@@ -1,14 +1,15 @@
 import { notFound } from "next/navigation";
 import ConfirmationScreen from "@/components/ConfirmationScreen";
-import { getListing, getListings } from "@/lib/listings";
+import { getListing, getListingParams } from "@/lib/listings";
 import { secondaryButton } from "@/lib/styles";
 
 export function generateStaticParams() {
-  return getListings().map(({ id, courseId }) => ({ courseId, listingId: id }));
+  return getListingParams();
 }
 
 export default async function CopyClaimedPage({ params }) {
-  const listing = getListing((await params).listingId);
+  const { courseId, listingId } = await params;
+  const listing = getListing(courseId, listingId);
   if (!listing) notFound();
 
   const { course, seller } = listing;
