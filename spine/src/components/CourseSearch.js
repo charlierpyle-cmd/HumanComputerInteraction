@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import Icon from "@/components/Icon";
 import { courses } from "@/lib/courses";
 import { sides } from "@/lib/styles";
 
@@ -47,6 +48,7 @@ export default function CourseSearch({ basePath, intro, notes = {} }) {
               {notes[id]}
             </span>
           )}
+          <Icon name="chevron" className="size-4 text-muted" />
         </Link>
       ))}
       {matches.length === 0 && (

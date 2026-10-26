@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { CONDITIONS } from "@/lib/shelf";
 import { primaryButton } from "@/lib/styles";
 
 const labelClass = "text-xs font-semibold text-muted";
@@ -23,12 +24,19 @@ export default function OfferForm({
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-1 flex-col gap-3.5">
-      <span className={labelClass}>Condition</span>
-      <div className={`flex items-center justify-between text-sm ${fieldClass}`}>
-        {condition}
-        {/* Decorative: the condition comes from the shelf listing. */}
-        <span className="text-xs font-semibold text-gold">Change</span>
-      </div>
+      <label htmlFor="condition" className={labelClass}>
+        Condition
+      </label>
+      <select
+        id="condition"
+        name="condition"
+        defaultValue={condition}
+        className={`text-sm ${fieldClass}`}
+      >
+        {CONDITIONS.map((option) => (
+          <option key={option}>{option}</option>
+        ))}
+      </select>
 
       <label htmlFor="price" className={labelClass}>
         Price

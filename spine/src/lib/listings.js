@@ -6,12 +6,12 @@ const listings = [
     id: "intro-stats-5e-elena",
     courseId: "stat-210",
     title: "Introduction to Statistics, 5th ed.",
+    edition: "5th edition",
     condition: "Good condition",
     conditionNote: "light highlighting",
     seller: "Elena",
     sellerResponse: "Responds within a day",
     price: 20,
-    requiresCode: false,
     acceptedEdition: true,
     studyGuideIncluded: false,
   },
@@ -19,23 +19,23 @@ const listings = [
     id: "intro-stats-4e-priya",
     courseId: "stat-210",
     title: "Introduction to Statistics, 4th ed.",
+    edition: "4th edition",
     condition: "Fair condition",
     seller: "Priya",
     price: 12,
-    requiresCode: true,
     acceptedEdition: false,
     studyGuideIncluded: false,
   },
   {
-    id: "intro-stats-new-bookstore",
+    id: "intro-stats-5e-bookstore",
     courseId: "stat-210",
-    title: "Introduction to Statistics, New",
-    condition: "Bookstore",
-    seller: "Bookstore",
+    title: "Introduction to Statistics, 5th ed.",
+    edition: "5th edition",
+    condition: "New",
+    seller: "Campus Bookstore",
     price: 95,
-    requiresCode: false,
     acceptedEdition: true,
-    studyGuideIncluded: false,
+    studyGuideIncluded: true,
   },
 ];
 
@@ -56,5 +56,25 @@ export function getListingsForCourse(courseId) {
 export function getListing(courseId, id) {
   const listing = listings.find((l) => l.courseId === courseId && l.id === id);
   return listing && withCourse(listing);
+}
+
+// Whether a copy works for the buyer's section, one line per requirement.
+// "problem" lines are the reasons a copy may not work; "info" is just a heads-up.
+export function getFitChecks(listing) {
+  const { code } = getCourse(listing.courseId);
+  return [
+    listing.acceptedEdition
+      ? { status: "ok", text: `${listing.edition} is accepted for ${code}` }
+      : { status: "problem", text: `${listing.edition} isn't accepted for ${code}` },
+    listing.studyGuideIncluded
+      ? { status: "ok", text: "Study guide supplement included" }
+      : { status: "info", text: "Study guide supplement not included (optional)" },
+  ];
+}
+
+export function getFitProblems(listing) {
+  return getFitChecks(listing)
+    .filter(({ status }) => status === "problem")
+    .map(({ text }) => text);
 }
 
