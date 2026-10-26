@@ -1,15 +1,27 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import ScreenHeader from "@/components/ScreenHeader";
 import ShelfBook from "@/components/ShelfBook";
+import { courses, getCourse } from "@/lib/courses";
 import { getListingsForCourse } from "@/lib/listings";
 
+export function generateStaticParams() {
+  return courses.map(({ id }) => ({ courseId: id }));
+}
+
 export default async function ListingResultsPage({ params }) {
-  const { courseId } = await params;
-  const listings = getListingsForCourse(courseId);
+  const course = getCourse((await params).courseId);
+  if (!course) notFound();
+  const listings = getListingsForCourse(course.id);
 
   return (
     <>
-      <ScreenHeader title="Listing results" backHref="/browse" side="buying" />
+      <ScreenHeader
+        title={`${course.code} copies`}
+        backHref="/browse"
+        side="buying"
+        step="2 of 3"
+      />
       <main className="flex flex-col gap-3.5 px-5 pt-6 pb-5">
         {listings.length === 0 && (
           <p className="text-sm text-muted">No copies listed yet.</p>
@@ -17,7 +29,7 @@ export default async function ListingResultsPage({ params }) {
         {listings.map((listing) => (
           <Link
             key={listing.id}
-            href={`/browse/${courseId}/${listing.id}`}
+            href={`/browse/${course.id}/${listing.id}`}
             className="block"
           >
             <ShelfBook

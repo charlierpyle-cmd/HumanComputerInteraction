@@ -1,25 +1,52 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import Icon from "@/components/Icon";
 
 const tabs = [
-  { href: "/", label: "Home" },
-  { href: "/browse", label: "Browse" },
-  { href: "/post", label: "Post" },
-  { href: "/shelf", label: "Shelf" },
+  { href: "/", label: "Home", icon: "home" },
+  { href: "/browse", label: "Browse", icon: "search" },
+  { href: "/post", label: "Post", icon: "post" },
+  { href: "/shelf", label: "Shelf", icon: "shelf" },
 ];
 
-export default function BottomNav() {
+// Screens that aren't a tab of their own keep the tab you reach them from lit.
+const parentTab = { matches: "/shelf", notifications: "/" };
+
+function tabFor(pathname) {
+  const section = pathname.split("/")[1];
+  return parentTab[section] ?? `/${section}`;
+}
+
+// The bar itself. With no `active` tab it doubles as the placeholder shown
+// while the current path is still unknown.
+export function NavBar({ active }) {
   return (
-    <nav className="sticky bottom-0 grid h-16 grid-cols-4 bg-white">
-      {tabs.map(({ href, label }) => (
-        <Link
-          key={href}
-          href={href}
-          className="flex flex-col items-center justify-center gap-1.5 text-[11px] font-medium"
-        >
-          <span className="size-[5px] rounded-full bg-accent" />
-          {label}
-        </Link>
-      ))}
+    <nav className="sticky bottom-0 grid h-16 grid-cols-4 border-t border-line bg-white">
+      {tabs.map(({ href, label, icon }) => {
+        const isActive = href === active;
+        return (
+          <Link
+            key={href}
+            href={href}
+            aria-current={isActive ? "page" : undefined}
+            className={`relative flex flex-col items-center justify-center gap-1 text-[11px] ${
+              isActive ? "font-semibold text-ink" : "font-medium text-muted"
+            }`}
+          >
+            {isActive && (
+              <span className="absolute inset-x-6 top-0 h-[3px] rounded-b-full bg-accent" />
+            )}
+            <Icon name={icon} />
+            {label}
+          </Link>
+        );
+      })}
     </nav>
   );
+}
+
+export default function BottomNav() {
+  return <NavBar active={tabFor(usePathname())} />;
 }

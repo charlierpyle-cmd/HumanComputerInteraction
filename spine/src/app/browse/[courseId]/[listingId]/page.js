@@ -1,12 +1,17 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ScreenHeader from "@/components/ScreenHeader";
-import { getListing } from "@/lib/listings";
+import { getListing, getListings } from "@/lib/listings";
+import { primaryButton } from "@/lib/styles";
+
+export function generateStaticParams() {
+  return getListings().map(({ id, courseId }) => ({ courseId, listingId: id }));
+}
 
 export default async function ListingDetailPage({ params }) {
   const { courseId, listingId } = await params;
   const listing = getListing(listingId);
-  if (!listing) notFound();
+  if (!listing || listing.courseId !== courseId) notFound();
 
   const checks = [
     { ok: listing.acceptedEdition, text: "Edition accepted for this course" },
@@ -16,8 +21,13 @@ export default async function ListingDetailPage({ params }) {
 
   return (
     <>
-      <ScreenHeader title="Listing detail" backHref={`/browse/${courseId}`} side="buying" />
-      <main className="flex min-h-[calc(100vh-4rem)] flex-col gap-4 px-5 pt-6 pb-5">
+      <ScreenHeader
+        title="Listing detail"
+        backHref={`/browse/${courseId}`}
+        side="buying"
+        step="3 of 3"
+      />
+      <main className="flex flex-1 flex-col gap-4 px-5 pt-6 pb-5">
         <div className="rounded-lg border border-line bg-card px-4 py-3.5">
           <h2 className="text-sm font-semibold">{listing.title}</h2>
           <p className="text-xs text-muted">
@@ -44,9 +54,9 @@ export default async function ListingDetailPage({ params }) {
 
         <Link
           href={`/browse/${courseId}/${listing.id}/claimed`}
-          className="mt-auto rounded-lg bg-selling py-3.5 text-center text-xs font-bold tracking-wide text-white"
+          className={`mt-auto ${primaryButton.buying}`}
         >
-          CLAIM THIS COPY
+          Claim this copy
         </Link>
       </main>
     </>
