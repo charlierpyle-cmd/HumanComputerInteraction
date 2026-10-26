@@ -43,6 +43,10 @@ function withCourse(listing) {
   return { ...listing, course: getCourse(listing.courseId) };
 }
 
+export function getListings() {
+  return listings.map(withCourse);
+}
+
 export function getListingsForCourse(courseId) {
   return listings.filter((l) => l.courseId === courseId).map(withCourse);
 }
@@ -51,3 +55,4 @@ export function getListing(id) {
   const listing = listings.find((l) => l.id === id);
   return listing && withCourse(listing);
 }
+

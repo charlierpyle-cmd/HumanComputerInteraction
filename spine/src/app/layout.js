@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
-import BottomNav from "@/components/BottomNav";
+import { Suspense } from "react";
+import BottomNav, { NavBar } from "@/components/BottomNav";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -26,7 +27,10 @@ export default function RootLayout({ children }) {
       <body className="min-h-full flex flex-col">
         <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col bg-paper text-ink">
           <div className="flex flex-1 flex-col">{children}</div>
-          <BottomNav />
+          {/* The current path isn't known while prerendering some routes. */}
+          <Suspense fallback={<NavBar />}>
+            <BottomNav />
+          </Suspense>
         </div>
       </body>
     </html>
