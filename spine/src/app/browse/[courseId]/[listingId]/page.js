@@ -1,25 +1,26 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ScreenHeader from "@/components/ScreenHeader";
-import { getListing, getListingParams } from "@/lib/listings";
+import { getFitChecks, getFitProblems, getListing, getListingParams } from "@/lib/listings";
 import { primaryButton } from "@/lib/styles";
 
 export function generateStaticParams() {
   return getListingParams();
 }
 
+const checkStyles = {
+  ok: { mark: "✓", className: "text-green-800" },
+  problem: { mark: "✗", className: "text-red-700" },
+  info: { mark: "–", className: "text-muted" },
+};
+
 export default async function ListingDetailPage({ params }) {
   const { courseId, listingId } = await params;
   const listing = getListing(courseId, listingId);
   if (!listing) notFound();
 
-  const checks = [
-    { ok: listing.acceptedEdition, text: "Edition accepted for this course" },
-    { ok: !listing.requiresCode, text: "No access code required for this section" },
-    listing.studyGuideIncluded
-      ? { ok: true, text: "Study guide supplement included" }
-      : { neutral: true, text: "Study guide supplement not included" },
-  ];
+  const { code } = listing.course;
+  const problems = getFitProblems(listing);
 
   return (
     <>
@@ -42,13 +43,24 @@ export default async function ListingDetailPage({ params }) {
           </p>
         </div>
 
-        <h3 className="text-sm font-semibold">
-          Does this work for {listing.course.code}?
-        </h3>
-        <ul className="flex flex-col gap-1.5 text-xs">
-          {checks.map(({ ok, text, neutral }) => (
+        <div
+          className={`rounded-lg border px-4 py-3 text-sm font-semibold ${
+            problems.length
+              ? "border-amber-300 bg-amber-50 text-amber-900"
+              : "border-green-300 bg-green-50 text-green-900"
+          }`}
+        >
+          {problems.length
+            ? `May not work for ${code}: ${problems.length} problem${problems.length > 1 ? "s" : ""} below`
+            : `Works for your ${code} section`}
+        </div>
+
+        <ul className="flex flex-col gap-2 text-xs">
+          {getFitChecks(listing).map(({ status, text }) => (
             <li key={text} className="flex gap-2">
-              <span aria-hidden>{neutral ? "–" : ok ? "✓" : "✗"}</span>
+              <span aria-hidden className={`w-3 font-bold ${checkStyles[status].className}`}>
+                {checkStyles[status].mark}
+              </span>
               {text}
             </li>
           ))}

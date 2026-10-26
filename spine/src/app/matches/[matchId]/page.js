@@ -4,7 +4,7 @@ import ScreenHeader from "@/components/ScreenHeader";
 import ShelfBook from "@/components/ShelfBook";
 import { CURRENT_TERM } from "@/lib/courses";
 import { getMatch, getMatches } from "@/lib/shelf";
-import { primaryButton } from "@/lib/styles";
+import { primaryButton, textLink } from "@/lib/styles";
 
 export function generateStaticParams() {
   return getMatches().map(({ id }) => ({ matchId: id }));
@@ -31,15 +31,15 @@ export default async function MatchDetailPage({ params }) {
           <span className="text-xs text-muted">{match.buyerResponse}</span>
         </div>
         <h2 className="text-xs font-semibold text-muted">From your shelf</h2>
-        <ShelfBook book={match.book} />
-        <Link
-          href={`/matches/${match.id}/offer`}
-          className={`mt-auto ${primaryButton.selling}`}
-        >
-          Offer this copy
-        </Link>
-        {/* Decorative: declining isn't part of the tested path. */}
-        <p className="text-center text-[13px] text-muted">Not interested</p>
+        <ShelfBook book={match.book} code={match.course.code} />
+        <div className="mt-auto flex flex-col gap-4">
+          <Link href={`/matches/${match.id}/offer`} className={primaryButton.selling}>
+            Offer this copy
+          </Link>
+          <Link href={`/matches/${match.id}/declined`} className={`${textLink} text-muted`}>
+            Not interested
+          </Link>
+        </div>
       </main>
     </>
   );
