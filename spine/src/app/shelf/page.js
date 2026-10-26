@@ -10,7 +10,7 @@ export default function ShelfPage() {
 
   return (
     <>
-      <ScreenHeader title="My Shelf" backHref="/" side="selling" />
+      <ScreenHeader title="My Shelf" backHref="/" side="selling" step="1 of 3" />
       <main className="flex flex-col gap-3.5 px-5 pt-6 pb-5">
         {shelf.map((book) => {
           const { code } = getCourse(book.courseId);

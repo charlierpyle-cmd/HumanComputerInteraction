@@ -22,10 +22,10 @@ export default function ScreenHeader({ title, backHref, side, step }) {
           ←
         </Link>
       )}
-      <span className="flex flex-col">
+      <div className="flex flex-col">
         <h1 className="text-lg leading-tight font-semibold">{title}</h1>
         {step && <span className="text-[11px] text-white/70">Step {step}</span>}
-      </span>
+      </div>
       {theme && (
         <span
           className={`ml-auto rounded-full px-2.5 py-1 text-[10px] font-bold tracking-wide uppercase ${theme.bg}`}

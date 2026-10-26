@@ -1,22 +1,24 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ScreenHeader from "@/components/ScreenHeader";
-import { getListing, getListings } from "@/lib/listings";
+import { getListing, getListingParams } from "@/lib/listings";
 import { primaryButton } from "@/lib/styles";
 
 export function generateStaticParams() {
-  return getListings().map(({ id, courseId }) => ({ courseId, listingId: id }));
+  return getListingParams();
 }
 
 export default async function ListingDetailPage({ params }) {
   const { courseId, listingId } = await params;
-  const listing = getListing(listingId);
-  if (!listing || listing.courseId !== courseId) notFound();
+  const listing = getListing(courseId, listingId);
+  if (!listing) notFound();
 
   const checks = [
     { ok: listing.acceptedEdition, text: "Edition accepted for this course" },
     { ok: !listing.requiresCode, text: "No access code required for this section" },
-    { ok: listing.studyGuideIncluded, text: "Study guide supplement not included", neutral: !listing.studyGuideIncluded },
+    listing.studyGuideIncluded
+      ? { ok: true, text: "Study guide supplement included" }
+      : { neutral: true, text: "Study guide supplement not included" },
   ];
 
   return (
