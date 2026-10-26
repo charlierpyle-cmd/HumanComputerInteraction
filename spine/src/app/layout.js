@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "spine",
+  title: "Spine",
   description: "Buy and sell used course textbooks.",
 };
 

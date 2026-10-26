@@ -1,5 +1,7 @@
 import { getCourse } from "./courses";
 
+export const CONDITIONS = ["Like new", "Good condition", "Fair condition"];
+
 // Stand-in for the signed-in seller's shelf and the class-waitlist buyers
 // matched to it. How matches get made is out of scope.
 export const shelf = [

@@ -3,7 +3,7 @@ import ScreenHeader from "@/components/ScreenHeader";
 import { primaryButton, sides } from "@/lib/styles";
 
 // The end of every task: a checkmark, what just happened, and a way home.
-export default function ConfirmationScreen({ title, side, recap, actions, children }) {
+export default function ConfirmationScreen({ title, side, recap, children }) {
   return (
     <>
       <ScreenHeader title={title} side={side} />
@@ -21,7 +21,6 @@ export default function ConfirmationScreen({ title, side, recap, actions, childr
         <p className="rounded-lg border border-line bg-card px-4 py-3 text-xs">
           {recap}
         </p>
-        {actions}
         <Link href="/" className={primaryButton[side]}>
           Back to Home
         </Link>
