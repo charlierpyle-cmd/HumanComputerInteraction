@@ -11,3 +11,8 @@ function withCourse(waitlist) {
 export function getWaitlists() {
   return waitlists.map(withCourse);
 }
+
+export function getWaitlist(courseId) {
+  const waitlist = waitlists.find((waitlist) => waitlist.courseId === courseId);
+  return waitlist && withCourse(waitlist);
+}

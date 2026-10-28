@@ -11,7 +11,7 @@ const normalize = (text) => text.toLowerCase().replace(/\s+/g, "");
 
 // Shared by Post and Browse. `basePath` is where picking a course goes, `intro`
 // says what picking one will do, and `notes` (keyed by course id) adds a short
-// status beside a course, like "3 copies".
+// status beside a course, like "On your waitlist" or "3 copies".
 export default function CourseSearch({ basePath, intro, notes = {} }) {
   const [query, setQuery] = useState("");
   const needle = normalize(query);
@@ -52,7 +52,18 @@ export default function CourseSearch({ basePath, intro, notes = {} }) {
         </Link>
       ))}
       {matches.length === 0 && (
-        <p className="text-sm text-muted">No courses match “{query}”.</p>
+        <div role="status" className="flex flex-col items-start gap-2 text-sm text-muted">
+          <p>
+            No courses match “{query}”. Try the course code, like STAT 210.
+          </p>
+          <button
+            type="button"
+            onClick={() => setQuery("")}
+            className="font-semibold text-ink underline underline-offset-2"
+          >
+            Clear search
+          </button>
+        </div>
       )}
     </main>
   );

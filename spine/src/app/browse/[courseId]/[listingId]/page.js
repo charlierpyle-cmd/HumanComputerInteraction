@@ -1,8 +1,7 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import ScreenHeader from "@/components/ScreenHeader";
 import { getFitChecks, getFitProblems, getListing, getListingParams } from "@/lib/listings";
-import { primaryButton } from "@/lib/styles";
+import ClaimButton from "./ClaimButton";
 
 export function generateStaticParams() {
   return getListingParams();
@@ -66,12 +65,11 @@ export default async function ListingDetailPage({ params }) {
           ))}
         </ul>
 
-        <Link
-          href={`/browse/${courseId}/${listing.id}/claimed`}
-          className={`mt-auto ${primaryButton.buying}`}
-        >
-          Claim this copy
-        </Link>
+        <ClaimButton
+          claimHref={`/browse/${courseId}/${listing.id}/claimed`}
+          backHref={`/browse/${courseId}`}
+          problems={problems}
+        />
       </main>
     </>
   );

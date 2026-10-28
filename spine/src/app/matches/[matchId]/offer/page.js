@@ -32,7 +32,7 @@ export default async function MakeOfferPage({ params }) {
           buyer={match.buyer}
           condition={match.book.condition}
           suggestedPrice={match.suggestedPrice}
-          typicalPrice={match.typicalPrice}
+          typicalRange={match.typicalRange}
         />
       </main>
     </>

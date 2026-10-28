@@ -15,6 +15,13 @@ export default async function RequestPostedPage({ params }) {
       title="Request posted"
       side="buying"
       recap={`${course.shortTitle ?? course.title} · ${course.code} · on waitlist 7 days`}
+      undo={{
+        label: "Leave waitlist",
+        doneTitle: "You left the waitlist",
+        doneText: `You're off the ${course.code} waitlist, so sellers won't be matched with you.`,
+        retryHref: `/post/${course.id}`,
+        retryLabel: "Rejoin waitlist",
+      }}
     >
       You’re on the {course.code} waitlist. We’ll match you with any seller who
       lists a copy, not just one person.

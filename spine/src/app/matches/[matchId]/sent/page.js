@@ -16,6 +16,13 @@ export default async function OfferSentPage({ params }) {
       title="Offer sent"
       side="selling"
       recap={`${course.shortTitle ?? course.title} · ${course.code} · held 7 days`}
+      undo={{
+        label: "Withdraw offer",
+        doneTitle: "Offer withdrawn",
+        doneText: `${match.buyer} won't see your offer. Your copy stays on your shelf.`,
+        retryHref: `/matches/${match.id}`,
+        retryLabel: "Back to match",
+      }}
     >
       {match.buyer} has about a week to accept. We’ll notify you either way.
     </ConfirmationScreen>

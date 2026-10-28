@@ -18,6 +18,13 @@ export default async function CopyClaimedPage({ params }) {
       title="Copy claimed"
       side="buying"
       recap={`${course.shortTitle ?? course.title} · ${course.code} · held 7 days`}
+      undo={{
+        label: "Release this copy",
+        doneTitle: "Copy released",
+        doneText: `${seller}'s copy is open to other students again.`,
+        retryHref: `/browse/${course.id}`,
+        retryLabel: "Back to listings",
+      }}
     >
       This copy is held for you for 7 days. We’ve told {seller}, who will
       message you to arrange pickup.

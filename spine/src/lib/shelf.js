@@ -26,7 +26,7 @@ const matches = [
     buyer: "Marcus",
     buyerResponse: "Usually responds within a day",
     suggestedPrice: 20,
-    typicalPrice: "$18–24",
+    typicalRange: [18, 24],
   },
 ];
 
