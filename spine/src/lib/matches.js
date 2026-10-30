@@ -1,34 +1,35 @@
 // Match conflict rule: first accept wins.
-// A match is open to every student who owns a fitting copy. The first to accept
-// claims it; everyone else sees "no longer available". If the claimer doesn't
-// confirm within the hold, the match reopens.
+// A match is shown to every student who owns a fitting copy. The first to accept
+// claims it for HOLD_HOURS; everyone else sees "taken". If the hold runs out
+// before the offer is confirmed, the match reopens for the others.
 
 export const HOLD_HOURS = 24;
+export const CURRENT_USER = "me";
 
-export function isMatchAvailable(match) {
-  if (match.status === "open") return true;
-  if (match.status === "pending" && match.holdExpiresAt) {
-    return Date.now() > match.holdExpiresAt; // hold lapsed, reopened
-  }
-  return false;
+// state is undefined (nobody has claimed it) or
+// { status: "pending" | "claimed", claimedBy, holdExpiresAt }
+// Returns "open", "yours", or "taken".
+export function getMatchAvailability(state, userId = CURRENT_USER, now = Date.now()) {
+  if (!state) return "open";
+  if (state.status === "pending" && now > state.holdExpiresAt) return "open";
+  if (state.claimedBy === userId) return "yours";
+  return "taken";
 }
 
-export function acceptMatch(match, listingId, acceptedBy) {
-  if (!isMatchAvailable(match)) {
-    return { ok: false, reason: "taken" };
-  }
+export function claimMatch(state, userId = CURRENT_USER, now = Date.now()) {
+  const availability = getMatchAvailability(state, userId, now);
+  if (availability === "taken") return { ok: false, reason: "taken" };
+  if (availability === "yours") return { ok: true, state };
   return {
     ok: true,
-    match: {
-      ...match,
+    state: {
       status: "pending",
-      claimedListingId: listingId,
-      claimedBy: acceptedBy,
-      holdExpiresAt: Date.now() + HOLD_HOURS * 60 * 60 * 1000,
+      claimedBy: userId,
+      holdExpiresAt: now + HOLD_HOURS * 60 * 60 * 1000,
     },
   };
 }
 
-export function confirmMatch(match) {
-  return { ...match, status: "claimed" };
+export function confirmClaim(state) {
+  return { ...state, status: "claimed" };
 }

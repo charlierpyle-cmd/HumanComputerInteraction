@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { claimMatchById, confirmMatchClaim } from "@/lib/matchState";
 import { CONDITIONS } from "@/lib/shelf";
 import { primaryButton } from "@/lib/styles";
 
@@ -34,6 +35,8 @@ export default function OfferForm({
   const [price, setPrice] = useState(String(suggestedPrice));
   // Errors wait until the seller leaves the field or tries to send.
   const [checked, setChecked] = useState(false);
+  // True if another student claimed this match while the form was open.
+  const [taken, setTaken] = useState(false);
   const { error, warning } = checkPrice(price, typicalRange, buyer);
   const showError = checked && error;
 
@@ -44,6 +47,13 @@ export default function OfferForm({
       event.currentTarget.elements.price.focus();
       return;
     }
+    // First accept wins: make sure the match is still ours before sending.
+    const claim = claimMatchById(matchId);
+    if (!claim.ok) {
+      setTaken(true);
+      return;
+    }
+    confirmMatchClaim(matchId);
     // No backend yet: sending just advances to the confirmation screen.
     router.push(`/matches/${matchId}/sent`);
   }
@@ -110,6 +120,12 @@ export default function OfferForm({
         placeholder="Add a note…"
         className={`text-[13px] placeholder:text-muted ${fieldClass}`}
       />
+
+      <p role="alert" className="text-xs font-medium text-red-700 empty:hidden">
+        {taken
+          ? "Another student with a copy accepted this request first, so your offer wasn’t sent."
+          : ""}
+      </p>
 
       <button type="submit" className={`mt-auto ${primaryButton.selling}`}>
         Send offer

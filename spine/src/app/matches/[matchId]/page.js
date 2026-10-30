@@ -1,10 +1,9 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import ScreenHeader from "@/components/ScreenHeader";
 import ShelfBook from "@/components/ShelfBook";
 import { CURRENT_TERM } from "@/lib/courses";
 import { getMatch, getMatches } from "@/lib/shelf";
-import { primaryButton, textLink } from "@/lib/styles";
+import MatchActions from "./MatchActions";
 
 export const instant = false;
 
@@ -35,12 +34,7 @@ export default async function MatchDetailPage({ params }) {
         <h2 className="text-xs font-semibold text-muted">From your shelf</h2>
         <ShelfBook book={match.book} code={match.course.code} />
         <div className="mt-auto flex flex-col gap-4">
-          <Link href={`/matches/${match.id}/offer`} className={primaryButton.selling}>
-            Offer this copy
-          </Link>
-          <Link href={`/matches/${match.id}/declined`} className={`${textLink} text-muted`}>
-            Not interested
-          </Link>
+          <MatchActions matchId={match.id} />
         </div>
       </main>
     </>

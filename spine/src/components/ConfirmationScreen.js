@@ -3,13 +3,22 @@
 import Link from "next/link";
 import { useState } from "react";
 import ScreenHeader from "@/components/ScreenHeader";
+import { deleteRequest } from "@/lib/myRequests";
 import { primaryButton, secondaryButton, sides } from "@/lib/styles";
 
 // The end of every task: a checkmark, what just happened, and a way home.
-// `undo` ({ label, doneTitle, doneText, retryHref, retryLabel }) lets the user
-// take the action back; the screen then says so in place.
+// `undo` ({ label, doneTitle, doneText, retryHref, retryLabel, removeRequest })
+// lets the user take the action back; the screen then says so in place.
+// `removeRequest` ({ courseId, seed }) also deletes that "Looking for" request.
 export default function ConfirmationScreen({ title, side, recap, undo, children }) {
   const [undone, setUndone] = useState(false);
+
+  function handleUndo() {
+    if (undo.removeRequest) {
+      deleteRequest(undo.removeRequest.seed, undo.removeRequest.courseId);
+    }
+    setUndone(true);
+  }
 
   if (undone) {
     return (
@@ -62,7 +71,7 @@ export default function ConfirmationScreen({ title, side, recap, undo, children 
         {undo && (
           <button
             type="button"
-            onClick={() => setUndone(true)}
+            onClick={handleUndo}
             className={secondaryButton}
           >
             {undo.label}

@@ -2,6 +2,8 @@ import { notFound } from "next/navigation";
 import ConfirmationScreen from "@/components/ConfirmationScreen";
 import { getMatch, getMatches } from "@/lib/shelf";
 
+export const instant = false;
+
 export function generateStaticParams() {
   return getMatches().map(({ id }) => ({ matchId: id }));
 }

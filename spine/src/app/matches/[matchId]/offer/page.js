@@ -1,7 +1,10 @@
 import { notFound } from "next/navigation";
 import ScreenHeader from "@/components/ScreenHeader";
 import { getMatch, getMatches } from "@/lib/shelf";
+import MatchGate from "./MatchGate";
 import OfferForm from "./OfferForm";
+
+export const instant = false;
 
 export function generateStaticParams() {
   return getMatches().map(({ id }) => ({ matchId: id }));
@@ -27,13 +30,15 @@ export default async function MakeOfferPage({ params }) {
           </span>
           <span className="text-xs text-muted">{course.code}</span>
         </div>
-        <OfferForm
-          matchId={match.id}
-          buyer={match.buyer}
-          condition={match.book.condition}
-          suggestedPrice={match.suggestedPrice}
-          typicalRange={match.typicalRange}
-        />
+        <MatchGate matchId={match.id}>
+          <OfferForm
+            matchId={match.id}
+            buyer={match.buyer}
+            condition={match.book.condition}
+            suggestedPrice={match.suggestedPrice}
+            typicalRange={match.typicalRange}
+          />
+        </MatchGate>
       </main>
     </>
   );

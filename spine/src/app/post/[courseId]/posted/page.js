@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import ConfirmationScreen from "@/components/ConfirmationScreen";
 import { courses, getCourse } from "@/lib/courses";
+import { getRequestSeed } from "@/lib/waitlists";
 
 export const instant = false;
 
@@ -24,6 +25,7 @@ export default async function RequestPostedPage({ params }) {
         doneText: `You’re no longer looking for a ${course.code} book, so sellers won’t be matched with you.`,
         retryHref: `/post/${course.id}`,
         retryLabel: "Post it again",
+        removeRequest: { courseId: course.id, seed: getRequestSeed() },
       }}
     >
       You’re now looking for a {course.code} book. We’ll match you with any
