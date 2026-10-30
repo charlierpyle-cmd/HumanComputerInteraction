@@ -1,6 +1,9 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import ConfirmationScreen from "@/components/ConfirmationScreen";
 import { courses, getCourse } from "@/lib/courses";
+
+export const instant = false;
 
 export function generateStaticParams() {
   return courses.map(({ id }) => ({ courseId: id }));
@@ -14,17 +17,21 @@ export default async function RequestPostedPage({ params }) {
     <ConfirmationScreen
       title="Request posted"
       side="buying"
-      recap={`${course.shortTitle ?? course.title} · ${course.code} · on waitlist 7 days`}
+      recap={`${course.shortTitle ?? course.title} · ${course.code} · “Looking for” request active 7 days`}
       undo={{
-        label: "Leave waitlist",
-        doneTitle: "You left the waitlist",
-        doneText: `You're off the ${course.code} waitlist, so sellers won't be matched with you.`,
+        label: "Delete request",
+        doneTitle: "Request deleted",
+        doneText: `You’re no longer looking for a ${course.code} book, so sellers won’t be matched with you.`,
         retryHref: `/post/${course.id}`,
-        retryLabel: "Rejoin waitlist",
+        retryLabel: "Post it again",
       }}
     >
-      You’re on the {course.code} waitlist. We’ll match you with any seller who
-      lists a copy, not just one person.
+      You’re now looking for a {course.code} book. We’ll match you with any
+      seller who lists a copy, not just one person, and you can{" "}
+      <Link href="/my-requests" className="font-semibold underline">
+        edit or delete your request
+      </Link>{" "}
+      any time.
     </ConfirmationScreen>
   );
 }

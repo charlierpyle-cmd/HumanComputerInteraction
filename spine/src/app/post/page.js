@@ -4,15 +4,20 @@ import { getWaitlists } from "@/lib/waitlists";
 
 export default function PostPage() {
   const notes = Object.fromEntries(
-    getWaitlists().map(({ courseId }) => [courseId, "On your waitlist"]),
+    getWaitlists().map(({ courseId }) => [courseId, "You’re already looking"]),
   );
 
   return (
     <>
-      <ScreenHeader title="Request a book" backHref="/" side="buying" step="1 of 2" />
+      <ScreenHeader
+        title="Post a “Looking for” request"
+        backHref="/"
+        side="buying"
+        step="1 of 2"
+      />
       <CourseSearch
         basePath="/post"
-        intro="Pick your course. We'll add you to its waitlist and tell you when someone lists a copy."
+        intro="Can’t find a copy? Pick any course, from any class, and we’ll tell you when someone lists one."
         notes={notes}
       />
     </>

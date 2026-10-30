@@ -6,6 +6,8 @@ import { CURRENT_TERM } from "@/lib/courses";
 import { getMatch, getMatches } from "@/lib/shelf";
 import { primaryButton, textLink } from "@/lib/styles";
 
+export const instant = false;
+
 export function generateStaticParams() {
   return getMatches().map(({ id }) => ({ matchId: id }));
 }

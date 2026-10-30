@@ -4,7 +4,12 @@ import Icon from "@/components/Icon";
 import ScreenHeader from "@/components/ScreenHeader";
 import ShelfBook from "@/components/ShelfBook";
 import { courses, getCourse } from "@/lib/courses";
-import { getFitProblems, getListingsForCourse } from "@/lib/listings";
+import {
+  formatPrice,
+  getFitProblems,
+  getListingsForCourse,
+  isFree,
+} from "@/lib/listings";
 import { primaryButton, secondaryButton, textLink } from "@/lib/styles";
 import { getWaitlist } from "@/lib/waitlists";
 
@@ -28,18 +33,18 @@ export default async function ListingResultsPage({ params }) {
       />
       <main className="flex flex-1 flex-col gap-3.5 px-5 pt-6 pb-5">
         {listings.length === 0 && (
-          // Nothing to browse: point to the waitlist instead of a dead end.
+          // Nothing to browse: point to a "Looking for" request instead of a dead end.
           <>
             <p role="status" className="text-sm text-muted">
               No copies of {course.code} are listed yet.{" "}
               {waitlist
-                ? "You’re already on its waitlist, so we’ll tell you when one is."
-                : "Join the waitlist and we’ll tell you when one is."}
+                ? "You’re already looking for one, so we’ll tell you when a copy is listed."
+                : "Post a “Looking for” request and we’ll tell you when one is."}
             </p>
             <div className="mt-auto flex flex-col gap-3">
               {!waitlist && (
                 <Link href={`/post/${course.id}`} className={primaryButton.buying}>
-                  Join the {course.code} waitlist
+                  Post a “Looking for” request
                 </Link>
               )}
               <Link href="/browse" className={secondaryButton}>
@@ -48,6 +53,12 @@ export default async function ListingResultsPage({ params }) {
             </div>
           </>
         )}
+        {listings.length > 0 && (
+          <p className="text-[13px] text-muted">
+            These are copies people have already listed. Pick one to request it
+            from its owner.
+          </p>
+        )}
         {listings.map((listing) => {
           const fits = getFitProblems(listing).length === 0;
           return (
@@ -55,17 +66,29 @@ export default async function ListingResultsPage({ params }) {
               <ShelfBook
                 book={{
                   title: listing.title,
-                  condition: `${listing.condition} · ${listing.seller} · $${listing.price}`,
+                  condition: `${listing.condition} · ${listing.seller} · ${formatPrice(listing)}`,
                 }}
                 code={course.code}
                 trailing={<Icon name="chevron" className="size-4 text-muted" />}
               >
-                <span
-                  className={`mt-1 w-fit rounded px-1.5 py-0.5 text-[10px] font-bold ${
-                    fits ? "bg-green-100 text-green-800" : "bg-amber-100 text-amber-900"
-                  }`}
-                >
-                  {fits ? "✓ Fits your section" : "! May not fit your section"}
+                <span className="mt-1 flex flex-wrap gap-1">
+                  <span
+                    className={`w-fit rounded px-1.5 py-0.5 text-[10px] font-bold ${
+                      fits ? "bg-green-100 text-green-800" : "bg-amber-100 text-amber-900"
+                    }`}
+                  >
+                    {fits ? "✓ Fits your section" : "! May not fit your section"}
+                  </span>
+                  {isFree(listing) && (
+                    <span className="w-fit rounded bg-blue-100 px-1.5 py-0.5 text-[10px] font-bold text-blue-800">
+                      Free
+                    </span>
+                  )}
+                  {listing.status === "pending" && (
+                    <span className="w-fit rounded bg-gray-200 px-1.5 py-0.5 text-[10px] font-bold text-gray-700">
+                      Request pending
+                    </span>
+                  )}
                 </span>
               </ShelfBook>
             </Link>
@@ -75,7 +98,7 @@ export default async function ListingResultsPage({ params }) {
           <p className="pt-2 text-center text-[13px] text-muted">
             None of these work?{" "}
             <Link href={`/post/${course.id}`} className={`${textLink} text-buying`}>
-              Join the waitlist
+              Post a “Looking for” request
             </Link>
           </p>
         )}
