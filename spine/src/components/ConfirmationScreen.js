@@ -1,22 +1,32 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import ScreenHeader from "@/components/ScreenHeader";
+import { restoreMatch, withdrawOffer } from "@/lib/matchState";
+import { unlistBook } from "@/lib/myListings";
 import { deleteRequest } from "@/lib/myRequests";
 import { primaryButton, secondaryButton, sides } from "@/lib/styles";
 
 // The end of every task: a checkmark, what just happened, and a way home.
-// `undo` ({ label, doneTitle, doneText, retryHref, retryLabel, removeRequest })
-// lets the user take the action back; the screen then says so in place.
-// `removeRequest` ({ courseId, seed }) also deletes that "Looking for" request.
+// `undo` ({ label, doneTitle, doneText, retryHref, retryLabel }) lets the user
+// take the action back; the screen then says so in place. It can also name the
+// change to reverse: `removeRequest` (a course id) deletes that "Looking for"
+// request, `withdrawOffer` (a match id) reopens a match the seller offered on,
+// `restoreMatch` (a match id) brings back a match they passed on, and
+// `unlistBook` (a shelf book id) takes that book off Browse.
 export default function ConfirmationScreen({ title, side, recap, undo, children }) {
   const [undone, setUndone] = useState(false);
 
+  // Next keeps a page mounted but hidden after you leave it. Reset the undo as
+  // it's hidden, so doing the task again doesn't land on the "undone" screen.
+  useLayoutEffect(() => () => setUndone(false), []);
+
   function handleUndo() {
-    if (undo.removeRequest) {
-      deleteRequest(undo.removeRequest.seed, undo.removeRequest.courseId);
-    }
+    if (undo.removeRequest) deleteRequest(undo.removeRequest);
+    if (undo.withdrawOffer) withdrawOffer(undo.withdrawOffer);
+    if (undo.restoreMatch) restoreMatch(undo.restoreMatch);
+    if (undo.unlistBook) unlistBook(undo.unlistBook);
     setUndone(true);
   }
 

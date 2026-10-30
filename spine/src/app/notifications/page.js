@@ -1,11 +1,13 @@
+"use client";
+
 import Link from "next/link";
 import Icon from "@/components/Icon";
 import ScreenHeader from "@/components/ScreenHeader";
-import { getNotifications } from "@/lib/notifications";
+import { useNotifications } from "@/lib/notifications";
 import { sides } from "@/lib/styles";
 
 export default function NotificationsPage() {
-  const notifications = getNotifications();
+  const notifications = useNotifications();
 
   return (
     <>

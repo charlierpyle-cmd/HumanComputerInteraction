@@ -1,15 +1,16 @@
+"use client";
+
 import CourseSearch from "@/components/CourseSearch";
 import ScreenHeader from "@/components/ScreenHeader";
-import { courses } from "@/lib/courses";
-import { getListingsForCourse } from "@/lib/listings";
+import { useListings } from "@/lib/myListings";
 
 export default function BrowsePage() {
+  const listings = useListings();
   // Only courses with copies get a note, so they stand out from the rest.
+  const counts = {};
+  for (const { courseId } of listings) counts[courseId] = (counts[courseId] ?? 0) + 1;
   const notes = Object.fromEntries(
-    courses.flatMap(({ id }) => {
-      const count = getListingsForCourse(id).length;
-      return count ? [[id, count === 1 ? "1 copy" : `${count} copies`]] : [];
-    }),
+    Object.entries(counts).map(([id, count]) => [id, count === 1 ? "1 copy" : `${count} copies`]),
   );
 
   return (

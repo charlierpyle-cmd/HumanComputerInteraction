@@ -1,7 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useTransition } from "react";
+import { parsePrice } from "@/lib/listings";
 import { claimMatchById, confirmMatchClaim } from "@/lib/matchState";
 import { CONDITIONS } from "@/lib/shelf";
 import { primaryButton } from "@/lib/styles";
@@ -11,17 +12,12 @@ const fieldClass = "rounded-lg border border-line bg-white px-3.5 py-3";
 
 // An `error` blocks sending; a `warning` is advice the seller can ignore.
 function checkPrice(text, [low, high], buyer) {
-  const digits = text.trim().replace(/^\$/, "");
-  if (!digits) return { error: "Enter a price." };
-  if (!/^\d+$/.test(digits)) return { error: "Use whole dollars, like 20." };
-  const price = Number(digits);
-  if (price < 1) return { error: "The price has to be at least $1." };
-  if (price > high * 2) {
-    return {
-      warning: `That's well above the typical $${low}–${high}. ${buyer} may pass on it.`,
-    };
-  }
-  return {};
+  const result = parsePrice(text);
+  if (result.error || result.price <= high * 2) return result;
+  return {
+    ...result,
+    warning: `That's well above the typical $${low}–${high}. ${buyer} may pass on it.`,
+  };
 }
 
 export default function OfferForm({
@@ -37,11 +33,16 @@ export default function OfferForm({
   const [checked, setChecked] = useState(false);
   // True if another student claimed this match while the form was open.
   const [taken, setTaken] = useState(false);
-  const { error, warning } = checkPrice(price, typicalRange, buyer);
+  // True from the tap until the next screen is up, so the button answers right
+  // away and a second tap can't send it again. A transition, not state, so it
+  // ends on its own: Next keeps this page mounted after it's left.
+  const [sending, startSending] = useTransition();
+  const { error, warning, price: amount } = checkPrice(price, typicalRange, buyer);
   const showError = checked && error;
 
   function handleSubmit(event) {
     event.preventDefault();
+    if (sending) return;
     setChecked(true);
     if (error) {
       event.currentTarget.elements.price.focus();
@@ -53,9 +54,14 @@ export default function OfferForm({
       setTaken(true);
       return;
     }
-    confirmMatchClaim(matchId);
+    const data = new FormData(event.currentTarget);
+    confirmMatchClaim(matchId, {
+      price: amount,
+      condition: String(data.get("condition")),
+      note: String(data.get("note") ?? "").trim(),
+    });
     // No backend yet: sending just advances to the confirmation screen.
-    router.push(`/matches/${matchId}/sent`);
+    startSending(() => router.push(`/matches/${matchId}/sent`));
   }
 
   return (
@@ -118,8 +124,12 @@ export default function OfferForm({
         type="text"
         name="note"
         placeholder="Add a note…"
+        aria-describedby="note-hint"
         className={`text-[13px] placeholder:text-muted ${fieldClass}`}
       />
+      <span id="note-hint" className="-mt-2 text-[11px] text-muted">
+        Sent to {buyer} along with your price and condition.
+      </span>
 
       <p role="alert" className="text-xs font-medium text-red-700 empty:hidden">
         {taken
@@ -127,8 +137,12 @@ export default function OfferForm({
           : ""}
       </p>
 
-      <button type="submit" className={`mt-auto ${primaryButton.selling}`}>
-        Send offer
+      <button
+        type="submit"
+        disabled={sending}
+        className={`mt-auto ${primaryButton.selling}`}
+      >
+        {sending ? "Sending…" : "Send offer"}
       </button>
     </form>
   );

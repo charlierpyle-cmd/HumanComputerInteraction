@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import ScreenHeader from "@/components/ScreenHeader";
 import { CURRENT_TERM, courses, getCourse } from "@/lib/courses";
-import { getRequestSeed } from "@/lib/waitlists";
 import RequestForm from "./RequestForm";
 
 export const instant = false;
@@ -33,7 +32,6 @@ export default async function ConfirmRequestPage({ params }) {
           courseId={course.id}
           code={course.code}
           courseTitle={course.title}
-          seed={getRequestSeed()}
         />
       </main>
     </>

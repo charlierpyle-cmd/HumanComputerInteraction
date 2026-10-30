@@ -22,6 +22,7 @@ export default async function MatchDeclinedPage({ params }) {
         doneText: `${buyer}'s request is back, so you can still make an offer.`,
         retryHref: `/matches/${match.id}`,
         retryLabel: "Review request",
+        restoreMatch: match.id,
       }}
     >
       {buyer} stays on the {course.code} waitlist, so another seller can still

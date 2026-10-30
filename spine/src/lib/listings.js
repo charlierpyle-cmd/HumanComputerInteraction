@@ -97,6 +97,16 @@ export function formatPrice(listing) {
   return isFree(listing) ? "Free" : `$${listing.price}`;
 }
 
+// Reads a price the seller typed. Returns { price } or { error } to show them.
+export function parsePrice(text) {
+  const digits = text.trim().replace(/^\$/, "");
+  if (!digits) return { error: "Enter a price." };
+  if (!/^\d+$/.test(digits)) return { error: "Use whole dollars, like 20." };
+  const price = Number(digits);
+  if (price < 1) return { error: "The price has to be at least $1." };
+  return { price };
+}
+
 // Whether a copy works for the buyer's section, one line per requirement.
 // "problem" lines are the reasons a copy may not work; "info" is just a heads-up.
 export function getFitChecks(listing) {

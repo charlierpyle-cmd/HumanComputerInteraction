@@ -17,6 +17,12 @@ export const shelf = [
     title: "Academic Writing, 3rd ed.",
     condition: "Like new",
   },
+  {
+    id: "intro-psych-2e",
+    courseId: "psyc-181",
+    title: "Introduction to Psychology, 2nd ed.",
+    condition: "Fair condition",
+  },
 ];
 
 const matches = [
@@ -28,10 +34,22 @@ const matches = [
     suggestedPrice: 20,
     typicalRange: [18, 24],
   },
+  {
+    id: "psyc-181-jordan",
+    bookId: "intro-psych-2e",
+    buyer: "Jordan",
+    buyerResponse: "Usually responds within a few hours",
+    suggestedPrice: 15,
+    typicalRange: [12, 18],
+  },
 ];
 
+export function getBook(id) {
+  return shelf.find((book) => book.id === id);
+}
+
 function withDetails(match) {
-  const book = shelf.find(({ id }) => id === match.bookId);
+  const book = getBook(match.bookId);
   return { ...match, book, course: getCourse(book.courseId) };
 }
 

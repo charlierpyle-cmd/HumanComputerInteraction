@@ -7,8 +7,6 @@ import { secondaryButton } from "@/lib/styles";
 export default function MatchGate({ matchId, children }) {
   const claim = useMatchClaim(matchId);
 
-  if (!claim) return null;
-
   if (claim.availability === "taken") {
     return (
       <>

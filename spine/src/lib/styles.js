@@ -17,8 +17,9 @@ export const sides = {
   },
 };
 
+// Disabled is how a button looks while its tap is being handled.
 const buttonBase =
-  "block w-full rounded-lg py-3.5 text-center text-[15px] font-semibold";
+  "block w-full rounded-lg py-3.5 text-center text-[15px] font-semibold disabled:opacity-70";
 
 export const primaryButton = {
   buying: `${buttonBase} bg-buying text-white`,

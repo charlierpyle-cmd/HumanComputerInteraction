@@ -1,10 +1,13 @@
+"use client";
+
 import CourseSearch from "@/components/CourseSearch";
 import ScreenHeader from "@/components/ScreenHeader";
-import { getWaitlists } from "@/lib/waitlists";
+import { useRequests } from "@/lib/myRequests";
 
 export default function PostPage() {
+  const requests = useRequests();
   const notes = Object.fromEntries(
-    getWaitlists().map(({ courseId }) => [courseId, "You’re already looking"]),
+    requests.map(({ courseId }) => [courseId, "You’re already looking"]),
   );
 
   return (

@@ -5,13 +5,10 @@ import { useState } from "react";
 import { deleteRequest, updateRequest, useRequests } from "@/lib/myRequests";
 import { primaryButton, secondaryButton } from "@/lib/styles";
 
-export default function MyRequestsList({ seed }) {
-  const requests = useRequests(seed);
+export default function MyRequestsList() {
+  const requests = useRequests();
   const [editing, setEditing] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(null);
-
-  // Still reading the browser's storage.
-  if (!requests) return null;
 
   return (
     <main className="flex flex-1 flex-col gap-3.5 px-5 pt-6 pb-5">
@@ -36,7 +33,7 @@ export default function MyRequestsList({ seed }) {
               onSubmit={(e) => {
                 e.preventDefault();
                 const data = new FormData(e.currentTarget);
-                updateRequest(seed, r.courseId, {
+                updateRequest(r.courseId, {
                   bookTitle: String(data.get("bookTitle") ?? "").trim(),
                   note: String(data.get("note") ?? "").trim(),
                   anyEdition: data.get("anyEdition") === "on",
@@ -85,7 +82,7 @@ export default function MyRequestsList({ seed }) {
                 <button
                   type="button"
                   onClick={() => {
-                    deleteRequest(seed, r.courseId);
+                    deleteRequest(r.courseId);
                     setConfirmDelete(null);
                   }}
                   className={primaryButton.buying}

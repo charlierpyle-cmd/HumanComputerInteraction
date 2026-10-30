@@ -1,12 +1,14 @@
+"use client";
+
 import Link from "next/link";
 import Icon from "@/components/Icon";
-import { getNotifications } from "@/lib/notifications";
-import { getMatches } from "@/lib/shelf";
+import { useMatches } from "@/lib/matchState";
+import { useNotifications } from "@/lib/notifications";
 import { sides } from "@/lib/styles";
 
 export default function Home() {
-  const notifications = getNotifications();
-  const requests = getMatches().length;
+  const notifications = useNotifications();
+  const requests = useMatches().filter(({ status }) => status === "open").length;
 
   // Same order as the bottom bar, split by which side of a trade you're on.
   const groups = [

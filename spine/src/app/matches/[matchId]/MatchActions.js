@@ -2,15 +2,16 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { claimMatchById, releaseMatchClaim, useMatchClaim } from "@/lib/matchState";
+import { useTransition } from "react";
+import { claimMatchById, passMatch, useMatchClaim } from "@/lib/matchState";
 import { HOLD_HOURS } from "@/lib/matches";
 import { primaryButton, secondaryButton, textLink } from "@/lib/styles";
 
 export default function MatchActions({ matchId }) {
   const router = useRouter();
   const claim = useMatchClaim(matchId);
-
-  if (!claim) return null;
+  // True from the tap until the offer screen is up, so the button answers.
+  const [opening, startOpening] = useTransition();
 
   if (claim.availability === "taken") {
     return (
@@ -34,7 +35,7 @@ export default function MatchActions({ matchId }) {
 
   function handleOffer() {
     const result = claimMatchById(matchId);
-    if (result.ok) router.push(`/matches/${matchId}/offer`);
+    if (result.ok) startOpening(() => router.push(`/matches/${matchId}/offer`));
   }
 
   return (
@@ -44,12 +45,17 @@ export default function MatchActions({ matchId }) {
           ? "You’ve claimed this request. Nobody else can accept it while you finish your offer."
           : `Other students with this book may have been matched too. The first to accept gets it, and you’ll have ${HOLD_HOURS} hours to finish your offer.`}
       </p>
-      <button type="button" onClick={handleOffer} className={primaryButton.selling}>
-        Offer this copy
+      <button
+        type="button"
+        onClick={handleOffer}
+        disabled={opening}
+        className={primaryButton.selling}
+      >
+        {opening ? "Opening…" : "Offer this copy"}
       </button>
       <Link
         href={`/matches/${matchId}/declined`}
-        onClick={() => releaseMatchClaim(matchId)}
+        onClick={() => passMatch(matchId)}
         className={`${textLink} text-muted`}
       >
         Not interested

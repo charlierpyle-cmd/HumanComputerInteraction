@@ -2,17 +2,24 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useTransition } from "react";
 import { addRequest, useRequests } from "@/lib/myRequests";
 import { primaryButton, secondaryButton } from "@/lib/styles";
 
-export default function RequestForm({ courseId, code, courseTitle, seed }) {
+export default function RequestForm({ courseId, code, courseTitle }) {
   const router = useRouter();
-  const requests = useRequests(seed);
+  const requests = useRequests();
+  // True from the tap until the next screen is up, so the button answers right
+  // away. It also keeps the form showing meanwhile, instead of the "already
+  // looking" notice the new request would bring up. A transition, not state,
+  // so it ends on its own: Next keeps this page mounted after it's left.
+  const [posting, startPosting] = useTransition();
 
   function handleSubmit(event) {
     event.preventDefault();
+    if (posting) return;
     const data = new FormData(event.currentTarget);
-    addRequest(seed, {
+    addRequest({
       courseId,
       code,
       courseTitle,
@@ -22,13 +29,10 @@ export default function RequestForm({ courseId, code, courseTitle, seed }) {
       joinedDaysAgo: 0,
       daysLeft: 7,
     });
-    router.push(`/post/${courseId}/posted`);
+    startPosting(() => router.push(`/post/${courseId}/posted`));
   }
 
-  // Still reading the browser's storage.
-  if (!requests) return null;
-
-  const existing = requests.find((r) => r.courseId === courseId);
+  const existing = !posting && requests.find((r) => r.courseId === courseId);
 
   if (existing) {
     // Already looking for this course: posting again would only duplicate it.
@@ -106,8 +110,12 @@ export default function RequestForm({ courseId, code, courseTitle, seed }) {
       <p className="text-xs text-muted">
         Your request lasts 7 days. You can edit or delete it at any time.
       </p>
-      <button type="submit" className={`mt-auto ${primaryButton.buying}`}>
-        Post my request
+      <button
+        type="submit"
+        disabled={posting}
+        className={`mt-auto ${primaryButton.buying}`}
+      >
+        {posting ? "Posting…" : "Post my request"}
       </button>
     </form>
   );

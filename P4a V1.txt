@@ -1,2 +1,0 @@
-The project files are submitted through a zipped file, or they can be found at the GitHub repository linked below. The setup instructions are in the readme.
-The GitHub can be found here: https://github.com/charlierpyle-cmd/HumanComputerInteraction.git

@@ -1,8 +1,15 @@
 "use client";
 
-import Link from "next/link";
+import Link, { useLinkStatus } from "next/link";
 import { useState } from "react";
 import { primaryButton, secondaryButton } from "@/lib/styles";
+
+// A claim link's label. It changes the moment the link is tapped, while the
+// next screen loads.
+function ClaimLabel({ children }) {
+  const { pending } = useLinkStatus();
+  return pending ? "Claiming…" : children;
+}
 
 // Claims straight away when the copy fits. When it may not, the first tap
 // spells out why and makes going back the easy choice.
@@ -12,7 +19,7 @@ export default function ClaimButton({ claimHref, backHref, problems }) {
   if (problems.length === 0) {
     return (
       <Link href={claimHref} className={`mt-auto ${primaryButton.buying}`}>
-        Claim this copy
+        <ClaimLabel>Claim this copy</ClaimLabel>
       </Link>
     );
   }
@@ -46,7 +53,7 @@ export default function ClaimButton({ claimHref, backHref, problems }) {
         See other copies
       </Link>
       <Link href={claimHref} className={secondaryButton}>
-        Claim anyway
+        <ClaimLabel>Claim anyway</ClaimLabel>
       </Link>
     </div>
   );
