@@ -34,7 +34,7 @@ export function useNotifications() {
         .map(({ id, buyer, course }) => ({
           id,
           side: "selling",
-          href: `/matches/${id}`,
+          href: `/matches/${id}?from=notifications`,
           title: `${buyer} wants your ${course.code} book`,
           detail: "Other sellers may have been asked too. The first to accept gets it.",
           unread: !seenIds.includes(id),

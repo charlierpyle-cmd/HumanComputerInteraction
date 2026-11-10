@@ -13,14 +13,17 @@ export function generateStaticParams() {
 }
 
 export default async function MatchDetailPage({ params }) {
-  const match = getMatch((await params).matchId);
+  const { matchId, searchParams } = await params;
+  const match = getMatch(matchId);
   if (!match) notFound();
+
+  const fromNotifications = (await searchParams)?.from === "notifications";
 
   return (
     <>
       <ScreenHeader
         title="Match detail"
-        backHref="/shelf"
+        backHref={fromNotifications ? "/notifications" : "/shelf"}
         side="selling"
         step="2 of 3"
       />
