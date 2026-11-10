@@ -44,7 +44,7 @@ export function useNotifications() {
         return {
           id: `waitlist-${courseId}`,
           side: "buying",
-          href: `/browse/${courseId}`,
+          href: `/browse/${courseId}?from=notifications`,
           title: `Still looking for a ${code} book`,
           detail: `${
             copies === 0

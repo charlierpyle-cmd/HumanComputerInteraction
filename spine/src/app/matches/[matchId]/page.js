@@ -12,12 +12,13 @@ export function generateStaticParams() {
   return getMatches().map(({ id }) => ({ matchId: id }));
 }
 
-export default async function MatchDetailPage({ params }) {
-  const { matchId, searchParams } = await params;
+export default async function MatchDetailPage({ params, searchParams }) {
+  const { matchId } = await params;
+  const sParams = await searchParams;
   const match = getMatch(matchId);
   if (!match) notFound();
 
-  const fromNotifications = (await searchParams)?.from === "notifications";
+  const fromNotifications = sParams?.from === "notifications";
 
   return (
     <>
