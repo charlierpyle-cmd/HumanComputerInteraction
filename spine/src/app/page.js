@@ -78,7 +78,7 @@ export default function Home() {
       <main className="flex flex-1 flex-col gap-7 px-5 pt-6 pb-5">
         {groups.map(({ side, heading, entries }) => (
           <section key={side} className="flex flex-col gap-3">
-            <h2 className={`${sectionHeading} ${sides[side].text}`}>{heading}</h2>
+            <h2 className={`${sectionHeading} ${sides[side].heading}`}>{heading}</h2>
             {entries.map(({ href, icon, title, subtitle, status }) => (
               <Link
                 key={href}

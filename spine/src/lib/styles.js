@@ -10,6 +10,7 @@ export const sides = {
     border: "border-buying",
     radio: "accent-buying",
     checked: "has-checked:border-buying has-checked:bg-buying/10",
+    heading: "text-buying-dark"
   },
   selling: {
     label: "Selling",
@@ -20,6 +21,7 @@ export const sides = {
     border: "border-selling",
     radio: "accent-selling",
     checked: "has-checked:border-selling has-checked:bg-selling/10",
+    heading: "text-selling-dark"
   },
 };
 
@@ -46,7 +48,7 @@ export const card = "rounded-lg border border-line bg-card";
 export const cardLink = `${card} block transition-colors hover:border-ink/50 hover:bg-white`;
 
 // Type scale: screen titles live in ScreenHeader; these cover the rest.
-export const sectionHeading = "text-lg font-bold";
+export const sectionHeading = "text-2xl font-bold tracking-tight";
 export const fieldLabel = "text-sm font-semibold";
 export const fieldInput =
   "rounded-lg border border-line bg-white px-3.5 py-3 text-[15px] placeholder:text-muted";
