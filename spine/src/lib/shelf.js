@@ -1,42 +1,50 @@
 import { getCourse } from "./courses";
 
+// The three conditions a seller can choose from, with what each one means.
 export const CONDITIONS = ["Like new", "Good condition", "Fair condition"];
 
-// Stand-in for the signed-in seller's shelf and the class-waitlist buyers
-// matched to it. How matches get made is out of scope.
+export const CONDITION_OPTIONS = [
+  { value: "Like new", label: "Like new", description: "No marks or wear" },
+  { value: "Good condition", label: "Good", description: "Some highlighting or wear" },
+  { value: "Fair condition", label: "Fair", description: "Heavy wear, but every page is there" },
+];
+
+// Stand-in for the signed-in student's own books ("My Books") and the
+// course-waitlist buyers matched to them. How matches get made is out of scope.
+// None of these is for STAT 218 or PSYC 181, which the student needs books for.
 export const shelf = [
   {
-    id: "intro-stats-5e",
-    courseId: "stat-210",
-    title: "Introduction to Statistics, 5th ed.",
-    condition: "Good condition",
-  },
-  {
     id: "academic-writing-3e",
-    courseId: "engl-105",
+    courseId: "engl-151",
     title: "Academic Writing, 3rd ed.",
     condition: "Like new",
   },
   {
-    id: "intro-psych-2e",
-    courseId: "psyc-181",
-    title: "Introduction to Psychology, 2nd ed.",
+    id: "problem-solving-c-3e",
+    courseId: "csce-155a",
+    title: "Problem Solving with C, 3rd ed.",
+    condition: "Good condition",
+  },
+  {
+    id: "sociology-9e",
+    courseId: "soci-101",
+    title: "Sociology in Everyday Life, 9th ed.",
     condition: "Fair condition",
   },
 ];
 
 const matches = [
   {
-    id: "stat-210-marcus",
-    bookId: "intro-stats-5e",
+    id: "csce-155a-marcus",
+    bookId: "problem-solving-c-3e",
     buyer: "Marcus",
     buyerResponse: "Usually responds within a day",
-    suggestedPrice: 20,
-    typicalRange: [18, 24],
+    suggestedPrice: 25,
+    typicalRange: [20, 30],
   },
   {
-    id: "psyc-181-jordan",
-    bookId: "intro-psych-2e",
+    id: "soci-101-jordan",
+    bookId: "sociology-9e",
     buyer: "Jordan",
     buyerResponse: "Usually responds within a few hours",
     suggestedPrice: 15,

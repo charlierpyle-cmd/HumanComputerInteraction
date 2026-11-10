@@ -4,7 +4,7 @@ import MyRequestsList from "./MyRequestsList";
 export default function MyRequestsPage() {
   return (
     <>
-      <ScreenHeader title="My requests" backHref="/" side="buying" />
+      <ScreenHeader title="My requests" backHref="/post" side="buying" />
       <MyRequestsList />
     </>
   );

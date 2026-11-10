@@ -12,7 +12,7 @@ export function generateStaticParams() {
 export default async function OfferSentPage({ params }) {
   const match = getMatch((await params).matchId);
   if (!match) notFound();
-  const { course } = match;
+  const { book, course } = match;
 
   return (
     <ConfirmationScreen
@@ -22,13 +22,14 @@ export default async function OfferSentPage({ params }) {
         <OfferRecap
           matchId={match.id}
           buyer={match.buyer}
-          summary={`${course.shortTitle ?? course.title} · ${course.code} · held 7 days`}
+          summary={`${book.title} · ${course.code} · held 7 days`}
         />
       }
       undo={{
         label: "Withdraw offer",
+        confirm: `Withdraw your offer? ${match.buyer} won’t see it anymore.`,
         doneTitle: "Offer withdrawn",
-        doneText: `${match.buyer} won't see your offer. Your copy stays on your shelf.`,
+        doneText: `${match.buyer} won’t see your offer. Your copy stays in My Books.`,
         retryHref: `/matches/${match.id}`,
         retryLabel: "Back to match",
         withdrawOffer: match.id,

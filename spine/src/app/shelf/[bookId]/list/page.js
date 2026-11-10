@@ -19,9 +19,8 @@ export default async function ListBookPage({ params }) {
   return (
     <>
       <ScreenHeader title="List on Browse" backHref="/shelf" side="selling" />
-      <main className="flex flex-1 flex-col gap-3.5 px-5 pt-6 pb-5">
-        <h2 className="text-xs font-semibold text-muted">From your shelf</h2>
-        <ShelfBook book={book} code={code} />
+      <main className="flex flex-1 flex-col gap-4 px-5 pt-5 pb-5">
+        <ShelfBook book={{ title: book.title }} courseId={book.courseId} />
         <ListForm book={book} code={code} />
       </main>
     </>

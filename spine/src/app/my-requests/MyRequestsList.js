@@ -1,64 +1,52 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
+import RequestFields, { readRequestFields } from "@/components/RequestFields";
+import { getCourse } from "@/lib/courses";
 import { deleteRequest, updateRequest, useRequests } from "@/lib/myRequests";
-import { primaryButton, secondaryButton } from "@/lib/styles";
+import { describeRequest } from "@/lib/requestOptions";
+import { card, dangerButton, primaryButton, secondaryButton } from "@/lib/styles";
 
 export default function MyRequestsList() {
   const requests = useRequests();
   const [editing, setEditing] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(null);
 
+  // An open editor or "are you sure?" is a passing state: leaving the screen
+  // closes it, so coming back shows the plain list.
+  useLayoutEffect(
+    () => () => {
+      setEditing(null);
+      setConfirmDelete(null);
+    },
+    [],
+  );
+
   return (
-    <main className="flex flex-1 flex-col gap-3.5 px-5 pt-6 pb-5">
+    <main className="flex flex-1 flex-col gap-3 px-5 pt-5 pb-5">
       {requests.length === 0 && (
-        <p role="status" className="text-sm text-muted">
-          You have no active “Looking for” requests.
+        <p role="status" className="text-[15px] text-muted">
+          You have no active requests.
         </p>
       )}
 
       {requests.map((r) => (
-        <div
-          key={r.courseId}
-          className="flex flex-col gap-2 rounded-lg border border-line bg-card px-4 py-3.5"
-        >
-          <span className="text-sm font-semibold">
+        <div key={r.courseId} className={`flex flex-col gap-3 px-4 py-3.5 ${card}`}>
+          <span className="text-base font-semibold">
             {r.code} · {r.courseTitle}
           </span>
 
           {editing === r.courseId ? (
             <form
-              className="flex flex-col gap-2"
+              className="flex flex-col gap-4"
               onSubmit={(e) => {
                 e.preventDefault();
-                const data = new FormData(e.currentTarget);
-                updateRequest(r.courseId, {
-                  bookTitle: String(data.get("bookTitle") ?? "").trim(),
-                  note: String(data.get("note") ?? "").trim(),
-                  anyEdition: data.get("anyEdition") === "on",
-                });
+                updateRequest(r.courseId, readRequestFields(e.currentTarget));
                 setEditing(null);
               }}
             >
-              <input
-                name="bookTitle"
-                defaultValue={r.bookTitle}
-                placeholder="Specific book (optional)"
-                aria-label="Specific book"
-                className="rounded-lg border border-line bg-white px-3.5 py-3 text-[13px] placeholder:text-muted"
-              />
-              <label className="flex items-center gap-2 text-sm">
-                <input type="checkbox" name="anyEdition" defaultChecked={r.anyEdition} />
-                Any edition is fine
-              </label>
-              <input
-                name="note"
-                defaultValue={r.note}
-                placeholder="Note for sellers"
-                aria-label="Note for sellers"
-                className="rounded-lg border border-line bg-white px-3.5 py-3 text-[13px] placeholder:text-muted"
-              />
+              <RequestFields course={getCourse(r.courseId)} request={r} />
               <div className="flex gap-2">
                 <button type="submit" className={primaryButton.buying}>
                   Save
@@ -73,10 +61,10 @@ export default function MyRequestsList() {
               </div>
             </form>
           ) : confirmDelete === r.courseId ? (
-            <div role="alertdialog" className="flex flex-col gap-2">
-              <span className="text-xs text-muted">
-                Delete this request? You’ll stop getting match notifications for{" "}
-                {r.code}.
+            <div role="alertdialog" aria-label={`Delete ${r.code} request`} className="flex flex-col gap-3">
+              <span className="text-[15px]">
+                Delete this request? You’ll stop getting matched with {r.code}{" "}
+                sellers.
               </span>
               <div className="flex gap-2">
                 <button
@@ -85,12 +73,13 @@ export default function MyRequestsList() {
                     deleteRequest(r.courseId);
                     setConfirmDelete(null);
                   }}
-                  className={primaryButton.buying}
+                  className={dangerButton}
                 >
                   Delete
                 </button>
                 <button
                   type="button"
+                  autoFocus
                   onClick={() => setConfirmDelete(null)}
                   className={secondaryButton}
                 >
@@ -100,9 +89,8 @@ export default function MyRequestsList() {
             </div>
           ) : (
             <>
-              <span className="text-xs text-muted">
-                {r.bookTitle ? `${r.bookTitle} · ` : "Any book · "}
-                {r.anyEdition ? "Any edition" : "Course edition only"}
+              <span className="-mt-2 text-sm text-muted">
+                {describeRequest(r)}
                 {r.note ? ` · “${r.note}”` : ""} · {r.daysLeft} days left
               </span>
               <div className="flex gap-2">

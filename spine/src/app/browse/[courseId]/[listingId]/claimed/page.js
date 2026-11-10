@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import ConfirmationScreen from "@/components/ConfirmationScreen";
-import { getListing, getListingParams } from "@/lib/listings";
+import { formatPrice, getListing, getListingParams } from "@/lib/listings";
+
+export const instant = false;
 
 export function generateStaticParams() {
   return getListingParams();
@@ -17,11 +19,12 @@ export default async function CopyClaimedPage({ params }) {
     <ConfirmationScreen
       title="Copy claimed"
       side="buying"
-      recap={`${course.shortTitle ?? course.title} · ${course.code} · held 7 days`}
+      recap={`${listing.title} · ${course.code} · ${formatPrice(listing)} · held 7 days`}
       undo={{
         label: "Release this copy",
+        confirm: `Release this copy? ${seller}’s copy will be open to other students again.`,
         doneTitle: "Copy released",
-        doneText: `${seller}'s copy is open to other students again.`,
+        doneText: `${seller}’s copy is open to other students again.`,
         retryHref: `/browse/${course.id}`,
         retryLabel: "Back to listings",
       }}

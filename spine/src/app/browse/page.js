@@ -16,11 +16,7 @@ export default function BrowsePage() {
   return (
     <>
       <ScreenHeader title="Browse copies" backHref="/" side="buying" step="1 of 3" />
-      <CourseSearch
-        basePath="/browse"
-        intro="Pick your course to see copies other students are selling."
-        notes={notes}
-      />
+      <CourseSearch basePath="/browse" notes={notes} />
     </>
   );
 }

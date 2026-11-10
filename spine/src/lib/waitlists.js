@@ -2,12 +2,13 @@ import { getCourse } from "./courses";
 
 // Stand-in for the "Looking for" requests the signed-in student already has
 // when the app opens. lib/myRequests.js keeps the live copy.
-// A request lasts 7 days. bookTitle is optional (empty = any book for the course).
+// A request lasts 7 days. `book` and `minCondition` are described in
+// lib/requestOptions.js.
 const waitlists = [
   {
     courseId: "math-106",
-    bookTitle: "",
-    anyEdition: true,
+    book: "required",
+    minCondition: "any",
     note: "",
     joinedDaysAgo: 4,
     daysLeft: 3,

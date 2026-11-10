@@ -1,7 +1,7 @@
 "use client";
 
 import Link, { useLinkStatus } from "next/link";
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { primaryButton, secondaryButton } from "@/lib/styles";
 
 // A claim link's label. It changes the moment the link is tapped, while the
@@ -15,6 +15,10 @@ function ClaimLabel({ children }) {
 // spells out why and makes going back the easy choice.
 export default function ClaimButton({ claimHref, backHref, problems }) {
   const [warned, setWarned] = useState(false);
+
+  // The warning is a one-time answer to a tap: coming back to this copy later
+  // starts from the plain button again.
+  useLayoutEffect(() => () => setWarned(false), []);
 
   if (problems.length === 0) {
     return (
@@ -41,10 +45,10 @@ export default function ClaimButton({ claimHref, backHref, problems }) {
       role="alert"
       className="mt-auto flex flex-col gap-3 rounded-lg border border-amber-300 bg-amber-50 p-4"
     >
-      <p className="text-sm font-semibold text-amber-900">
-        This copy may not work for your section
+      <p className="text-[15px] font-semibold text-amber-900">
+        This copy may not work for your class
       </p>
-      <ul className="list-disc pl-4 text-xs text-amber-900">
+      <ul className="list-disc pl-4 text-sm text-amber-900">
         {problems.map((problem) => (
           <li key={problem}>{problem}</li>
         ))}

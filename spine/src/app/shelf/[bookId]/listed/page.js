@@ -23,15 +23,19 @@ export default async function BookListedPage({ params }) {
       recap={<ListingRecap bookId={book.id} summary={`${book.title} · ${course.code}`} />}
       undo={{
         label: "Take it down",
+        confirm: "Take it down? Students won’t see it on Browse anymore.",
         doneTitle: "Listing taken down",
-        doneText: `Your copy is off Browse. It stays on your shelf for the next ${course.code} request.`,
+        doneText: `Your copy is off Browse. It stays in My Books for the next ${course.code} request.`,
         retryHref: `/shelf/${book.id}/list`,
         retryLabel: "List it again",
         unlistBook: book.id,
       }}
     >
-      Students looking for a {course.code} book can now{" "}
-      <Link href={`/browse/${course.id}`} className="font-semibold underline">
+      Students in {course.code} can now{" "}
+      <Link
+        href={`/browse/${course.id}`}
+        className="font-semibold text-ink underline underline-offset-2"
+      >
         see your copy on Browse
       </Link>{" "}
       and claim it. We’ll tell you when someone does.

@@ -3,77 +3,71 @@
 import Link from "next/link";
 import Icon from "@/components/Icon";
 import ShelfBook from "@/components/ShelfBook";
-import { formatPrice, getFitProblems, isFree } from "@/lib/listings";
+import { fitsCourse, formatPrice } from "@/lib/listings";
 import { isMine, useListings } from "@/lib/myListings";
+import { sectionHeading } from "@/lib/styles";
 import RequestPrompt from "./RequestPrompt";
 
-// The copies listed for a course, live, so one the student lists from their
-// shelf shows up here straight away.
+const chevron = <Icon name="chevron" className="size-4 text-muted" />;
+
+// One copy. Status notes are plain colored text, not pills, so nothing that
+// can't be tapped looks like a button.
+function Copy({ listing, courseId, code }) {
+  const book = {
+    title: listing.title,
+    condition: `${listing.condition} · ${listing.seller} · ${formatPrice(listing)}`,
+  };
+
+  // Your own copy can't be claimed; it's managed from My Books.
+  if (isMine(listing)) {
+    return (
+      <Link href="/shelf">
+        <ShelfBook book={book} courseId={courseId} showCourse={false} interactive trailing={chevron}>
+          <span className="text-[13px] font-semibold text-selling">Your listing</span>
+        </ShelfBook>
+      </Link>
+    );
+  }
+
+  const fits = fitsCourse(listing);
+  return (
+    <Link href={`/browse/${courseId}/${listing.id}`}>
+      <ShelfBook book={book} courseId={courseId} showCourse={false} interactive trailing={chevron}>
+        <span
+          className={`text-[13px] font-semibold ${fits ? "text-green-800" : "text-amber-900"}`}
+        >
+          {fits ? `✓ Fits ${code}` : `! May not fit ${code}`}
+        </span>
+        {listing.status === "pending" && (
+          <span className="text-[13px] text-muted">Someone has asked for this copy</span>
+        )}
+      </ShelfBook>
+    </Link>
+  );
+}
+
+// The copies listed for a course, live, so one the student lists from My
+// Books shows up here straight away. Copies of the required edition come
+// first; other editions stay reachable underneath, clearly set apart.
 export default function CopyList({ courseId, code }) {
   const listings = useListings().filter((l) => l.courseId === courseId);
+  const fitting = listings.filter((l) => isMine(l) || fitsCourse(l));
+  const others = listings.filter((l) => !isMine(l) && !fitsCourse(l));
 
   return (
     <>
-      {listings.length > 0 && (
-        <p className="text-[13px] text-muted">
-          These are copies people have already listed. Pick one to request it
-          from its owner.
-        </p>
+      {fitting.length > 0 && others.length > 0 && (
+        <h2 className={`mt-2 ${sectionHeading}`}>Fits {code}</h2>
       )}
-      {listings.map((listing) => {
-        const book = {
-          title: listing.title,
-          condition: `${listing.condition} · ${listing.seller} · ${formatPrice(listing)}`,
-        };
-
-        // Your own copy can't be claimed; it's managed from your shelf.
-        if (isMine(listing)) {
-          return (
-            <Link key={listing.id} href="/shelf">
-              <ShelfBook
-                book={book}
-                code={code}
-                trailing={<Icon name="chevron" className="size-4 text-muted" />}
-              >
-                <span className="mt-1 w-fit rounded bg-selling/10 px-1.5 py-0.5 text-[10px] font-bold text-selling">
-                  Your listing
-                </span>
-              </ShelfBook>
-            </Link>
-          );
-        }
-
-        const fits = getFitProblems(listing).length === 0;
-        return (
-          <Link key={listing.id} href={`/browse/${courseId}/${listing.id}`}>
-            <ShelfBook
-              book={book}
-              code={code}
-              trailing={<Icon name="chevron" className="size-4 text-muted" />}
-            >
-              <span className="mt-1 flex flex-wrap gap-1">
-                <span
-                  className={`w-fit rounded px-1.5 py-0.5 text-[10px] font-bold ${
-                    fits ? "bg-green-100 text-green-800" : "bg-amber-100 text-amber-900"
-                  }`}
-                >
-                  {fits ? "✓ Fits your section" : "! May not fit your section"}
-                </span>
-                {isFree(listing) && (
-                  <span className="w-fit rounded bg-blue-100 px-1.5 py-0.5 text-[10px] font-bold text-blue-800">
-                    Free
-                  </span>
-                )}
-                {listing.status === "pending" && (
-                  <span className="w-fit rounded bg-gray-200 px-1.5 py-0.5 text-[10px] font-bold text-gray-700">
-                    Request pending
-                  </span>
-                )}
-              </span>
-            </ShelfBook>
-          </Link>
-        );
-      })}
+      {fitting.map((listing) => (
+        <Copy key={listing.id} listing={listing} courseId={courseId} code={code} />
+      ))}
+      {others.length > 0 && (
+        <h2 className={`mt-2 ${sectionHeading}`}>Other editions: may not work</h2>
+      )}
+      {others.map((listing) => (
+        <Copy key={listing.id} listing={listing} courseId={courseId} code={code} />
+      ))}
       <RequestPrompt courseId={courseId} code={code} hasCopies={listings.length > 0} />
     </>
   );

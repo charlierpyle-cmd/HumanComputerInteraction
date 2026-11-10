@@ -1,80 +1,51 @@
 "use client";
 
 import Link from "next/link";
+import { useLayoutEffect, useState } from "react";
 import Icon from "@/components/Icon";
-import MatchBadge from "@/components/MatchBadge";
 import ScreenHeader from "@/components/ScreenHeader";
 import ShelfBook from "@/components/ShelfBook";
 import { getCourse } from "@/lib/courses";
 import { formatPrice } from "@/lib/listings";
 import { useMatches } from "@/lib/matchState";
 import { unlistBook, useMyListings } from "@/lib/myListings";
-import { useRequests } from "@/lib/myRequests";
 import { shelf } from "@/lib/shelf";
-import { secondaryButton } from "@/lib/styles";
+import { dangerButton, secondaryButton, sectionHeading } from "@/lib/styles";
 
-// A small button on a book card, for what the seller can do with it next.
-const shelfAction =
-  "mt-1.5 w-fit rounded-md border border-selling px-2.5 py-1 text-xs font-semibold text-selling";
+// A full-size button on a book card, for what the seller can do with it next.
+const bookAction =
+  "mt-2 flex min-h-11 w-full items-center justify-center rounded-lg border border-selling bg-white px-3 text-sm font-semibold text-selling transition-colors hover:bg-selling/10";
 
 export default function ShelfPage() {
   const matches = useMatches();
-  const requests = useRequests();
   const listings = useMyListings();
+  // The book whose "Take it down" is waiting to be confirmed.
+  const [confirmingId, setConfirmingId] = useState(null);
+
+  // Leaving the screen cancels an unanswered "Take it down?".
+  useLayoutEffect(() => () => setConfirmingId(null), []);
+
+  // Passed and taken matches drop off; the book waits for the next one.
+  const matchFor = (book) =>
+    matches.find(
+      ({ bookId, status }) => bookId === book.id && (status === "open" || status === "offered"),
+    );
+  const wanted = shelf.filter(matchFor);
+  const others = shelf.filter((book) => !matchFor(book));
 
   return (
     <>
-      <ScreenHeader title="My Shelf" backHref="/" side="selling" step="1 of 3" />
-      <main className="flex flex-1 flex-col gap-3.5 px-5 pt-6 pb-5">
-        <p className="text-sm text-muted">
-          Books you’re done with. When a student on a course waitlist needs one,
-          it’s flagged here. Books nobody has asked for yet can go up on Browse.
-        </p>
-        {shelf.map((book) => {
+      <ScreenHeader title="My Books" backHref="/" side="selling" step="1 of 3" />
+      <main className="flex flex-1 flex-col gap-3 px-5 pt-5 pb-5">
+        {wanted.length > 0 && <h2 className={sectionHeading}>Students want these</h2>}
+        {wanted.map((book) => {
+          const match = matchFor(book);
           const { code } = getCourse(book.courseId);
-          // Passed and taken matches drop off; the book waits for the next one.
-          const match = matches.find(
-            ({ bookId, status }) =>
-              bookId === book.id && (status === "open" || status === "offered"),
-          );
-
-          if (!match) {
-            const listing = listings.find(({ bookId }) => bookId === book.id);
-            return (
-              <ShelfBook key={book.id} book={book} code={code}>
-                {listing ? (
-                  <>
-                    <span className="text-xs text-muted">
-                      Listed on Browse for {formatPrice(listing)}. Any student in{" "}
-                      {code} can claim it.
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => unlistBook(book.id)}
-                      className={shelfAction}
-                    >
-                      Take it down
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <span className="text-xs text-muted">
-                      No requests yet. We’ll tell you when someone joins the {code}{" "}
-                      waitlist, or you can list it now.
-                    </span>
-                    <Link href={`/shelf/${book.id}/list`} className={shelfAction}>
-                      List it on Browse
-                    </Link>
-                  </>
-                )}
-              </ShelfBook>
-            );
-          }
 
           if (match.status === "offered") {
             return (
-              <ShelfBook key={book.id} book={book} code={code}>
-                <span className="text-xs text-muted">
+              <ShelfBook key={book.id} book={book} courseId={book.courseId}>
+                <span className="mt-1 text-sm">
                   Offer sent to {match.buyer}. They have about a week to accept.
                 </span>
               </ShelfBook>
@@ -85,17 +56,17 @@ export default function ShelfPage() {
             <Link key={book.id} href={`/matches/${match.id}`}>
               <ShelfBook
                 book={book}
-                code={code}
+                courseId={book.courseId}
                 highlight
+                interactive
                 trailing={
-                  <span className="flex shrink-0 items-center gap-0.5 text-xs font-semibold text-selling">
+                  <span className="flex shrink-0 items-center gap-0.5 text-sm font-semibold text-selling">
                     Review
                     <Icon name="chevron" className="size-4" />
                   </span>
                 }
               >
-                <span className="mt-1 flex items-center gap-1.5 text-xs">
-                  <MatchBadge />
+                <span className="mt-1 text-sm font-semibold text-gold-ink">
                   {match.buyer} wants this for {code}
                 </span>
               </ShelfBook>
@@ -103,17 +74,63 @@ export default function ShelfPage() {
           );
         })}
 
-        {/* Your own "Looking for" requests, not the buyer requests above. */}
-        <div className="mt-auto flex flex-col gap-2 pt-4">
-          <p className="text-center text-xs text-muted">
-            {requests.length === 0
-              ? "You’re not looking for any books right now."
-              : `You’re looking for ${requests.length} book${requests.length > 1 ? "s" : ""} for your own courses.`}
-          </p>
-          <Link href="/my-requests" className={secondaryButton}>
-            Manage my requests
-          </Link>
-        </div>
+        <h2 className={`${wanted.length > 0 ? "mt-3" : ""} ${sectionHeading}`}>
+          {wanted.length > 0 ? "Your other books" : "Your books"}
+        </h2>
+        {others.map((book) => {
+          const listing = listings.find(({ bookId }) => bookId === book.id);
+
+          if (!listing) {
+            return (
+              <ShelfBook key={book.id} book={book} courseId={book.courseId}>
+                <Link href={`/shelf/${book.id}/list`} className={bookAction}>
+                  List it on Browse
+                </Link>
+              </ShelfBook>
+            );
+          }
+
+          return (
+            <ShelfBook key={book.id} book={book} courseId={book.courseId}>
+              <span className="mt-1 text-sm font-semibold text-selling">
+                On Browse for {formatPrice(listing)} · {listing.condition}
+              </span>
+              {confirmingId === book.id ? (
+                <span role="alertdialog" aria-label="Take it down?" className="mt-2 flex flex-col gap-2">
+                  <span className="text-sm">
+                    Take it down? Students won’t see it on Browse anymore.
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      unlistBook(book.id);
+                      setConfirmingId(null);
+                    }}
+                    className={dangerButton}
+                  >
+                    Take it down
+                  </button>
+                  <button
+                    type="button"
+                    autoFocus
+                    onClick={() => setConfirmingId(null)}
+                    className={secondaryButton}
+                  >
+                    Keep it listed
+                  </button>
+                </span>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setConfirmingId(book.id)}
+                  className={bookAction}
+                >
+                  Take it down
+                </button>
+              )}
+            </ShelfBook>
+          );
+        })}
       </main>
     </>
   );

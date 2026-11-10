@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { claimMatchById, passMatch, useMatchClaim } from "@/lib/matchState";
 import { HOLD_HOURS } from "@/lib/matches";
-import { primaryButton, secondaryButton, textLink } from "@/lib/styles";
+import { card, primaryButton, secondaryButton, textLink } from "@/lib/styles";
 
 export default function MatchActions({ matchId }) {
   const router = useRouter();
@@ -16,18 +16,15 @@ export default function MatchActions({ matchId }) {
   if (claim.availability === "taken") {
     return (
       <>
-        <div
-          role="status"
-          className="flex flex-col gap-1 rounded-lg border border-line bg-card px-4 py-3.5"
-        >
-          <span className="text-sm font-semibold">No longer available</span>
-          <span className="text-xs text-muted">
-            Another student with a copy accepted this request first. We’ll tell
-            you when someone else is looking for this book.
+        <div role="status" className={`flex flex-col gap-1 px-4 py-3.5 ${card}`}>
+          <span className="text-[15px] font-semibold">No longer available</span>
+          <span className="text-sm text-muted">
+            Another seller accepted this request first. We’ll tell you when
+            someone else needs this book.
           </span>
         </div>
         <Link href="/shelf" className={secondaryButton}>
-          Back to my shelf
+          Back to My Books
         </Link>
       </>
     );
@@ -40,10 +37,10 @@ export default function MatchActions({ matchId }) {
 
   return (
     <>
-      <p className="text-xs text-muted">
+      <p className="text-sm text-muted">
         {claim.availability === "yours"
-          ? "You’ve claimed this request. Nobody else can accept it while you finish your offer."
-          : `Other students with this book may have been matched too. The first to accept gets it, and you’ll have ${HOLD_HOURS} hours to finish your offer.`}
+          ? "It’s yours to finish: nobody else can accept it while you write your offer."
+          : `The first seller to accept gets it, with ${HOLD_HOURS} hours to send an offer.`}
       </p>
       <button
         type="button"

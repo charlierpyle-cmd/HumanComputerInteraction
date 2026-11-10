@@ -4,15 +4,16 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Icon from "@/components/Icon";
 
+// Same names and icons as the Home cards they lead to.
 const tabs = [
   { href: "/", label: "Home", icon: "home" },
   { href: "/browse", label: "Browse", icon: "search" },
-  { href: "/post", label: "Post", icon: "post" },
-  { href: "/shelf", label: "Shelf", icon: "shelf" },
+  { href: "/post", label: "Request", icon: "megaphone" },
+  { href: "/shelf", label: "My Books", icon: "tag" },
 ];
 
 // Screens that aren't a tab of their own keep the tab you reach them from lit.
-const parentTab = { matches: "/shelf", notifications: "/" };
+const parentTab = { matches: "/shelf", notifications: "/", "my-requests": "/post" };
 
 function tabFor(pathname) {
   const section = pathname.split("/")[1];
@@ -25,7 +26,7 @@ export function NavBar({ pathname }) {
   const active = pathname && tabFor(pathname);
 
   return (
-    <nav className="sticky bottom-0 grid h-16 grid-cols-4 border-t border-line bg-white">
+    <nav className="grid h-16 shrink-0 grid-cols-4 border-t border-line bg-white">
       {tabs.map(({ href, label, icon }) => {
         const isActive = href === active;
         // "page" only on the tab's own screen; a screen under it gets "true".
@@ -35,12 +36,12 @@ export function NavBar({ pathname }) {
             key={href}
             href={href}
             aria-current={current}
-            className={`relative flex flex-col items-center justify-center gap-1 text-[11px] ${
+            className={`relative flex flex-col items-center justify-center gap-1 text-xs transition-colors hover:bg-ink/5 hover:text-ink ${
               isActive ? "font-semibold text-ink" : "font-medium text-muted"
             }`}
           >
             {isActive && (
-              <span className="absolute inset-x-6 top-0 h-[3px] rounded-b-full bg-accent" />
+              <span className="absolute inset-x-5 top-0 h-[3px] rounded-b-full bg-accent" />
             )}
             <Icon name={icon} />
             {label}

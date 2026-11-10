@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import ScreenHeader from "@/components/ScreenHeader";
 import { getMatch, getMatches } from "@/lib/shelf";
+import { card } from "@/lib/styles";
 import MatchGate from "./MatchGate";
 import OfferForm from "./OfferForm";
 
@@ -13,7 +14,7 @@ export function generateStaticParams() {
 export default async function MakeOfferPage({ params }) {
   const match = getMatch((await params).matchId);
   if (!match) notFound();
-  const { course } = match;
+  const { book, course } = match;
 
   return (
     <>
@@ -23,18 +24,19 @@ export default async function MakeOfferPage({ params }) {
         side="selling"
         step="3 of 3"
       />
-      <main className="flex flex-1 flex-col gap-3.5 px-5 pt-6 pb-5">
-        <div className="flex flex-col gap-0.5 rounded-lg border border-line bg-card px-4 py-3.5">
-          <span className="text-sm font-semibold">
-            {course.shortTitle ?? course.title}, for {match.buyer}
+      <main className="flex flex-1 flex-col gap-3 px-5 pt-4 pb-5">
+        <div className={`flex flex-col gap-0.5 px-4 py-3 ${card}`}>
+          <span className="text-base font-semibold">
+            {book.title}, for {match.buyer}
           </span>
-          <span className="text-xs text-muted">{course.code}</span>
+          <span className="text-sm text-muted">
+            {course.code} · {course.title}
+          </span>
         </div>
         <MatchGate matchId={match.id}>
           <OfferForm
             matchId={match.id}
             buyer={match.buyer}
-            condition={match.book.condition}
             suggestedPrice={match.suggestedPrice}
             typicalRange={match.typicalRange}
           />

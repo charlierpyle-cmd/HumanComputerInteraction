@@ -1,38 +1,73 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
+/* Every text color here reaches at least 4.5:1 on paper and card. */
 @theme {
   --color-ink: #1e2330;
   --color-paper: #f3ece1;
   --color-card: #f9f5ee;
   --color-line: #c7baa1;
-  --color-muted: #6b6b66;
+  --color-muted: #5f5e59;
   --color-gold: #b8862b;
-  --color-accent: #d9822b;
+  --color-gold-ink: #8a5d12;
+  --color-accent: #b5651d;
   --color-buying: #286b82;
-  --color-selling: #3d7a4f;
+  --color-buying-dark: #1d5163;
+  --color-selling: #35704a;
+  --color-selling-dark: #275537;
+  --color-danger: #b42318;
+  --color-danger-dark: #8f1c13;
+  --color-desk: #ddd5c7;
+
+  /* Lighter shades for text on the dark header: about 8:1 on ink. */
+  --color-buying-light: #7cc4dc;
+  --color-selling-light: #7fcb97;
 }
 
-@media (prefers-color-scheme: dark) {
+@layer base {
+  body {
+    font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  }
+
+  /* Tailwind leaves buttons with the default arrow; anything tappable gets the
+     hand, so the cursor never disagrees with what a control does. */
+  button:not(:disabled),
+  select,
+  summary,
+  label:has(> input[type="radio"]),
+  label:has(> input[type="checkbox"]) {
+    cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: progress;
+  }
+
+  /* One visible focus ring for keyboard users, white on the dark headers. */
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --focus-ring: var(--color-ink);
+  }
+
+  .on-dark {
+    --focus-ring: #fff;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--focus-ring);
+    outline-offset: 2px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+/* The phone's own scroll area. Phones don't show a scrollbar, and leaving it
+   out keeps the width the same on every screen, so nothing shifts. */
+.phone-scroll {
+  scrollbar-width: none;
+}
+
+.phone-scroll::-webkit-scrollbar {
+  display: none;
 }

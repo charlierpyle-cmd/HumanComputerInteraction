@@ -4,13 +4,15 @@ import Link from "next/link";
 import Icon from "@/components/Icon";
 import { useMatches } from "@/lib/matchState";
 import { useNotifications } from "@/lib/notifications";
-import { sides } from "@/lib/styles";
+import { cardLink, sectionHeading, sides } from "@/lib/styles";
 
 export default function Home() {
   const notifications = useNotifications();
-  const requests = useMatches().filter(({ status }) => status === "open").length;
+  const unread = notifications.filter((n) => n.unread);
+  const wanted = useMatches().filter(({ status }) => status === "open").length;
 
   // Same order as the bottom bar, split by which side of a trade you're on.
+  // Each card has the same name and icon as its tab.
   const groups = [
     {
       side: "buying",
@@ -24,9 +26,9 @@ export default function Home() {
         },
         {
           href: "/post",
-          icon: "post",
+          icon: "megaphone",
           title: "Request a book",
-          subtitle: "Join a course waitlist before you buy new.",
+          subtitle: "Nobody selling yours? We’ll tell you when someone is.",
         },
       ],
     },
@@ -36,10 +38,12 @@ export default function Home() {
       entries: [
         {
           href: "/shelf",
-          icon: "shelf",
-          title: "My Shelf",
-          subtitle: "Sell books you're done with.",
-          badge: requests > 0 && `${requests} request${requests > 1 ? "s" : ""}`,
+          icon: "tag",
+          title: "My Books",
+          subtitle: "Sell books you’re done with.",
+          status:
+            wanted > 0 &&
+            `${wanted} student${wanted > 1 ? "s want" : " wants"} your books`,
         },
       ],
     },
@@ -47,70 +51,53 @@ export default function Home() {
 
   return (
     <>
-      <header className="flex h-[72px] shrink-0 items-center gap-3 bg-ink px-5 text-white">
+      <header className="on-dark sticky top-0 z-10 flex h-16 shrink-0 items-center gap-3 bg-ink px-4 text-white">
         <Link href="/" className="flex items-center gap-1.5 text-xl font-bold">
           <Icon name="logo" className="size-6 text-gold" />
           Spine
         </Link>
         <Link
           href="/notifications"
-          aria-label={`Notifications (${notifications.length} new)`}
-          className="relative ml-auto flex size-10 items-center justify-center rounded-md hover:bg-white/10"
+          aria-label={
+            unread.length > 0 ? `Notifications, ${unread.length} new` : "Notifications"
+          }
+          className="relative ml-auto flex size-11 items-center justify-center rounded-md transition-colors hover:bg-white/15"
         >
-          <Icon name="bell" />
-          {notifications.length > 0 && (
+          <Icon name="bell" className="size-6" />
+          {unread.length > 0 && (
             <span
               aria-hidden
-              className="absolute top-1 right-1 flex size-4 items-center justify-center rounded-full bg-accent text-[10px] font-bold"
+              className="absolute top-1 right-1 flex size-[18px] items-center justify-center rounded-full bg-danger text-xs font-bold"
             >
-              {notifications.length}
+              {unread.length}
             </span>
           )}
         </Link>
       </header>
 
-      <main className="flex flex-col gap-6 px-5 pt-6 pb-5">
-        {notifications.length > 0 && (
-          <Link
-            href="/notifications"
-            className="flex items-center gap-3 rounded-lg border border-gold bg-card px-4 py-3"
-          >
-            <Icon name="bell" className="size-5 text-gold" />
-            <span className="flex flex-1 flex-col gap-0.5 text-[13px]">
-              {notifications.map(({ id, title }) => (
-                <span key={id}>{title}</span>
-              ))}
-            </span>
-            <Icon name="chevron" className="size-4 text-muted" />
-          </Link>
-        )}
-
+      <main className="flex flex-1 flex-col gap-7 px-5 pt-6 pb-5">
         {groups.map(({ side, heading, entries }) => (
-          <section key={side} className="flex flex-col gap-2.5">
-            <h2 className={`text-xs font-bold tracking-wide uppercase ${sides[side].text}`}>
-              {heading}
-            </h2>
-            {entries.map(({ href, icon, title, subtitle, badge }) => (
+          <section key={side} className="flex flex-col gap-3">
+            <h2 className={`${sectionHeading} ${sides[side].text}`}>{heading}</h2>
+            {entries.map(({ href, icon, title, subtitle, status }) => (
               <Link
                 key={href}
                 href={href}
-                className="flex items-center gap-3 rounded-lg border border-line bg-card p-4"
+                className={`flex items-center gap-3.5 p-4 ${cardLink}`}
               >
                 <span
-                  className={`flex size-10 shrink-0 items-center justify-center rounded-md ${sides[side].tint} ${sides[side].text}`}
+                  className={`flex size-12 shrink-0 items-center justify-center rounded-md ${sides[side].tint} ${sides[side].text}`}
                 >
-                  <Icon name={icon} />
+                  <Icon name={icon} className="size-6" />
                 </span>
                 <span className="flex flex-1 flex-col gap-0.5">
-                  <span className="font-semibold">{title}</span>
-                  <span className="text-xs text-muted">{subtitle}</span>
+                  <span className="text-[17px] font-semibold">{title}</span>
+                  <span className="text-sm text-muted">{subtitle}</span>
+                  {status && (
+                    <span className="text-sm font-semibold text-gold-ink">{status}</span>
+                  )}
                 </span>
-                {badge && (
-                  <span className="shrink-0 rounded-full bg-gold px-2 py-0.5 text-[11px] font-bold text-white">
-                    {badge}
-                  </span>
-                )}
-                <Icon name="chevron" className="size-4 text-muted" />
+                <Icon name="chevron" className="size-5 text-muted" />
               </Link>
             ))}
           </section>

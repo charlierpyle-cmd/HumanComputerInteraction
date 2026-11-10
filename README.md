@@ -2,25 +2,36 @@
 
 Group 8: Andrew Churchich, Charlie Pyle, Treggie Sebek
 
-Spine is a phone-style web prototype for buying and selling used course textbooks between students. This is **Version 2**, revised after our cognitive walkthroughs and heuristic evaluations. What changed and why is in [DESIGN_CONSIDERATIONS.md](DESIGN_CONSIDERATIONS.md).
+Spine is a phone-style web prototype that helps UNL students buy and sell used course textbooks with each other. This is **Version 3**, the version we usability-test with eight participants. It was revised after our pilot session with our instructor, Dr. Bevins, and the November 4 in-class peer evaluations. What changed and why is in [DESIGN_CONSIDERATIONS.md](DESIGN_CONSIDERATIONS.md).
 
 ## Who it's for
 
-College students who need a textbook for a course this term and would rather not pay bookstore prices, and students who have finished a course and want to sell their copy to someone who needs it. Buyers join a waitlist for each course instead of hunting for one seller, and sellers are told when someone on that waitlist wants a book they own.
+Spine is for UNL students in two situations:
+
+- **Buyers** need a textbook for next semester's courses and would rather not pay bookstore prices. They can browse the copies other students are selling, or request a book for a course and be told when someone lists one.
+- **Sellers** have finished a course and want to sell their copy. They can list it on Browse, and they're told when a student needs a book they own.
 
 ## The three tasks
 
-Start each task on the Home screen. The bar along the bottom (Home, Browse, Post, Shelf) is on every screen and highlights where you are. The arrow at the top left goes back. Buying screens are marked in blue and selling screens in green.
+Start each task on Home. The bar along the bottom (Home, Browse, Request, My Books) is on every screen and highlights where you are, and the arrow at the top left goes back. Buying screens are marked in blue and selling screens in green.
 
-1. **Browse available copies and request a book.** You need the textbook for STAT 210. Browse the copies other students have listed, find one that fits your section, and claim it.
-2. **Post a request for a book.** You need the textbook for ENGL 105 and nobody is selling one yet. Post a "Looking for" request so you're told when a copy is listed.
-3. **View your shelf and offer one of your books.** Open My Shelf, find the book another student has asked for, and send them an offer.
+1. **Browse available copies and claim one.** You're taking STAT 218 and want to claim a copy of *Introduction to Statistics, 5th ed.* that another student is selling. The 4th edition is listed too. Trying to claim it warns that it may not work for the class.
+2. **Request a book.** You're taking PSYC 181, nobody is selling a copy, and the syllabus isn't posted. Post a request with a note telling sellers you need it soon. Requesting a course you've already requested (MATH 106) tells you so, so you don't end up with two requests.
+3. **Sell a book from My Books.** You've finished ENGL 151 and want to list *Academic Writing, 3rd ed.* on Browse. You must choose the book's condition, and the price takes whole dollars, so "19.99" shows an error.
 
-Each task ends on a confirmation screen with a checkmark, a summary, a "Back to Home" button and a way to undo (release the copy, delete the request, withdraw the offer).
+Each task ends on a confirmation screen with a summary, a "Back to Home" button and a way to undo it: release the copy, delete the request, or take the listing down. Undo asks before it removes anything.
+
+My Books also shows two books other students have asked for. You can review a request and send an offer, which works the same way.
 
 ## Running it
 
-You need **Node.js 20.9 or newer** (npm comes with it; download the LTS version from https://nodejs.org; we tested with Node 22.20.0), a web browser (Chrome, Edge, Firefox or Safari) and an internet connection to install packages and load fonts. There is no login, account or database to set up.
+You need:
+
+- **Node.js 20.9 or newer.** npm comes with it. Download the LTS version from https://nodejs.org. We tested with Node 22.20.0.
+- **A web browser:** Chrome, Edge, Firefox or Safari.
+- **An internet connection**, to install packages and load fonts.
+
+There is no login, account or database to set up.
 
 Get the files:
 
@@ -35,7 +46,15 @@ npm run dev
 ```
 
 The first `npm install` takes a minute or two. When the terminal shows `Ready`, open **http://localhost:3000** in your browser. To stop the server, press `Ctrl+C`. The commands are the same on Windows, macOS and Linux.
-
+s
 ### Viewing it at phone size
 
-Spine is designed as a phone app. On a desktop browser it shows up as a narrow column in the middle of the window, and that works fine. To see it at true phone size, open the browser's developer tools (`F12`), turn on device mode (`Ctrl+Shift+M`, or `Cmd+Shift+M` on a Mac) and pick a phone.
+On a computer, Spine appears in a phone-shaped frame in the middle of the window. The frame is 390 × 844, the size of an iPhone 12 to 15, and it only shrinks if the window is shorter than that.
+
+For our usability sessions, we use Chrome's phone view so every participant sees the same screen. To turn it on:
+
+1. Open the developer tools (`F12`).
+2. Turn on device mode (`Ctrl+Shift+M`, or `Cmd+Shift+M` on a Mac).
+3. Pick the **iPhone 12 Pro** preset at 100% zoom.
+
+On a narrow window, the app fills the whole window, as it would on a phone. 
