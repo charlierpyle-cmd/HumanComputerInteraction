@@ -57,4 +57,12 @@ For our usability sessions, we use Chrome's phone view so every participant sees
 2. Turn on device mode (`Ctrl+Shift+M`, or `Cmd+Shift+M` on a Mac).
 3. Pick the **iPhone 12 Pro** preset at 100% zoom.
 
-On a narrow window, the app fills the whole window, as it would on a phone. 
+On a narrow window, the app fills the whole window, as it would on a phone.
+
+## Known limitations and simulated functionality
+
+- **No accounts.** You're always the same student. Marcus and the other students, their requests and their listings are sample data.
+- **Nothing is saved.** Changes last until you reload the page or restart the app, then everything resets to the sample data. This also means every participant starts from the same state.
+- **Nothing is actually sent.** Claims, requests, offers and notifications only change what you see in the app. There's no messaging, payment or arranging a meet-up.
+- **Sample books.** The course codes are real UNL Spring 2027 courses, but the books, copies and prices are made up.
+- **Runs locally.** It runs on a laptop's local server, not a hosted site, and we test it in Chrome's phone view instead of on a real phone.
